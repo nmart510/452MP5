@@ -29,7 +29,7 @@ class Minion extends WASDObj {
             5,          // number of elements in this sequence
             0);         // horizontal padding in between
         this.mRenderComponent.setAnimationType(engine.eAnimationType.eSwing);
-        this.mRenderComponent.setAnimationSpeed(30);
+        this.mRenderComponent.setAnimationSpeed(5);
         // show each element for mAnimSpeed updates
 
 
