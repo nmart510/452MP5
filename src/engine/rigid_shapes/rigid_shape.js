@@ -28,7 +28,7 @@ class RigidShape {
         this.mInertia = 0;
 
         this.mFriction = 0.0;
-        this.mRestitution = 0.2;
+        this.mRestitution = 0.0;
 
         this.mAngularVelocity = 0;
 

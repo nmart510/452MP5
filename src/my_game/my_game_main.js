@@ -7,6 +7,7 @@
 import engine from "../engine/index.js";
 import Hero from "./objects/hero.js";
 import Head from "./objects/head.js";
+import Wing from "./objects/wing.js";
 import Minion from "./objects/minion.js";
 
 class MyGame extends engine.Scene {
@@ -29,6 +30,8 @@ class MyGame extends engine.Scene {
         this.mCollisionInfos = [];
         this.mHero = null;
         this.mHead = null;
+        this.mTop = null;
+        this.mBottom = null;
 
         this.mCurrentObj = 0;
         this.mTarget = null;
@@ -79,8 +82,12 @@ class MyGame extends engine.Scene {
 
         this.mHero = new Hero(this.kMinionSprite);
         this.mHead = new Head(this.kMinionSprite);
+        this.mTop = new Wing(this.kMinionSprite,60,70);
+        this.mBottom = new Wing(this.kMinionSprite,60,50);
         this.mAllObjs.addToSet(this.mHero);
         this.mAllObjs.addToSet(this.mHead);
+        this.mAllObjs.addToSet(this.mTop);
+        this.mAllObjs.addToSet(this.mBottom);
         this.mCurrentObj = 0;
                 
         // particle systems

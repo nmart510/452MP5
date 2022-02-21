@@ -13,7 +13,7 @@ let kMinionWidth = 6 * 0.5;
 let kMinionHeight = 4.8 * 0.5;
 let kMinionRandomSize = 5;
 
-class Minion extends WASDObj {
+class Wing extends WASDObj {
     constructor(spriteTexture, atX, atY) {
         super();
         let w = kMinionWidth + Math.random() * kMinionRandomSize;
@@ -40,7 +40,7 @@ class Minion extends WASDObj {
         let speed = 20 + Math.random() * 10;
         r.setVelocity(vx * speed, vy * speed);
         this.setRigidBody(r);
-        this.toggleDrawRenderable();
+        //this.toggleDrawRenderable();
         this.toggleDrawRigidShape();
     }
 
@@ -52,4 +52,4 @@ class Minion extends WASDObj {
     }
 }
 
-export default Minion;
+export default Wing;

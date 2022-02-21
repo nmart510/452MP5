@@ -32,11 +32,11 @@ let mCollisionInfoR2 = new CollisionInfo();
  */
 RigidRectangle.prototype.collisionTest = function (otherShape, collisionInfo) {
     let status = false;
-    if (otherShape.mType === "RigidCircle") {
-        status = this.collideRectCirc(otherShape, collisionInfo);
-    } else {
-        status = this.collideRectRect(this, otherShape, collisionInfo);
-    }
+    // if (otherShape.mType === "RigidCircle") {
+    //     status = this.collideRectCirc(otherShape, collisionInfo);
+    // } else {
+    //     status = this.collideRectRect(this, otherShape, collisionInfo);
+    // }
     return status;
 }
 
