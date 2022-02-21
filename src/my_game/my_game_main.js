@@ -20,6 +20,11 @@ class MyGame extends engine.Scene {
 
         // The camera to view the scene
         this.mCamera = null;
+        this.mCameraSet = null;
+        this.mHeroCam = null;
+        this.mSmallCam1 = null;
+        this.mSmallCam2 = null;
+        this.mSmallCam3 = null;
 
         this.mMsg = null;
         this.mShapeMsg = null;
@@ -72,6 +77,38 @@ class MyGame extends engine.Scene {
             200,                     // width of camera
             [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
         );
+
+        //smaller viewports
+        this.mCameraSet = new engine.ZoomCameraSet();
+
+        //small viewports
+        this.mHeroCam = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            15,
+            [0,600,200,200]
+        );
+        //the first dye pack camera
+        this.smallCam1 = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            6,
+            [200,600,200,200]
+        );
+        this.smallCam2 = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            6,
+            [400,600,200,200]
+        );
+        this.smallCam3 = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            6,
+            [600,600,200,200]
+        );
+        this.mCameraSet.addCamera(this.mHeroCam, this.smallCam1, this.smallCam2, this.smallCam3);
+        this.mHeroCam.setBackgroundColor([0,0,0,1]);
+        this.smallCam1.setBackgroundColor([1,1,1,1]);
+        this.smallCam2.setBackgroundColor([0,0,0,1]);
+        this.smallCam3.setBackgroundColor([1,1,1,1]);
+
         this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
         // sets the background to gray
         engine.defaultResources.setGlobalAmbientIntensity(3);
@@ -136,6 +173,9 @@ class MyGame extends engine.Scene {
         this.mTarget.draw(this.mCamera);
         this.mMsg.draw(this.mCamera);   
         this.mShapeMsg.draw(this.mCamera);
+
+        //set the camera matrix and draw to it after this.
+        this.mCameraSet.setCameraMatrix();
     }
 
     incShapeSize(obj, delta) {
