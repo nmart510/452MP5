@@ -21,10 +21,15 @@ class Head extends WASDObj {
         this.mRenderComponent.setElementPixelPositions(134, 314, 0, 180);
 
         let r = new engine.RigidRectangle(this.getXform(), 7.5, 7.5);
-        let vx = (Math.random() - 0.5);
-        let vy = (Math.random() - 0.5);
+        let vx = Math.random() - 0.5;
+        let vy = Math.random() - 0.5;
+        //|v| = sqrt(vx^2+xy^2)
+        //u = v/|v|
+        let vDot = Math.sqrt(vx*vx + vy*vy);
+        let u = vec2.fromValues(vx*(1/vDot),vy*(1/vDot));
+        console.log(vDot);
         let speed = 5 + Math.random() * 5;
-        r.setVelocity(vx * speed, vy * speed);
+        r.setVelocity(u[0] * speed, u[1] * speed);
         this.setRigidBody(r);
         //this.toggleDrawRenderable();
         this.toggleDrawRigidShape();
