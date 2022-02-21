@@ -13,7 +13,7 @@ let mPosCorrectionRate = 0.8;               // percentage of separation to proje
 let mRelaxationCount = 15;                  // number of relaxation iterations
 
 let mCorrectPosition = true;
-let mHasMotion = false;
+let mHasMotion = true;
 
 // getters and setters
 function getSystemAcceleration() { return vec2.clone(mSystemAcceleration); }

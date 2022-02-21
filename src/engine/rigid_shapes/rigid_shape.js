@@ -27,7 +27,7 @@ class RigidShape {
         this.mInvMass = 1;
         this.mInertia = 0;
 
-        this.mFriction = 0.8;
+        this.mFriction = 0.0;
         this.mRestitution = 0.2;
 
         this.mAngularVelocity = 0;
@@ -100,7 +100,7 @@ class RigidShape {
         let p = this.mXform.getPosition();
         vec2.scaleAndAdd(p, p, this.mVelocity, dt);
 
-        this.mXform.incRotationByRad(this.mAngularVelocity * dt);
+        //this.mXform.incRotationByRad(this.mAngularVelocity * dt);
     }
 
     setPosition(x, y) {
