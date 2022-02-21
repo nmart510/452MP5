@@ -11,6 +11,7 @@ import Wing from "./objects/wing.js";
 import Minion from "./objects/minion.js";
 import DyePack from "./objects/dyepack.js";
 
+//THIS IS A TEST
 class MyGame extends engine.Scene {
     constructor() {
         super();
