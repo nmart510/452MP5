@@ -9,6 +9,7 @@ import Hero from "./objects/hero.js";
 import Head from "./objects/head.js";
 import Wing from "./objects/wing.js";
 import Minion from "./objects/minion.js";
+import DyePack from "./objects/dyepack.js";
 
 class MyGame extends engine.Scene {
     constructor() {
@@ -17,6 +18,7 @@ class MyGame extends engine.Scene {
         this.kPlatformTexture = "assets/platform.png";
         this.kWallTexture = "assets/wall.png";
         this.kTargetTexture = "assets/target.png";
+        //this.kDyePackTexture = "";
 
         // The camera to view the scene
         this.mCamera = null;
@@ -55,6 +57,7 @@ class MyGame extends engine.Scene {
         engine.texture.load(this.kPlatformTexture);
         engine.texture.load(this.kWallTexture);
         engine.texture.load(this.kTargetTexture);
+        //engine.texture.load(this.kDyePackTexture);
     }
 
     unload() {
@@ -62,6 +65,7 @@ class MyGame extends engine.Scene {
         engine.texture.unload(this.kPlatformTexture);
         engine.texture.unload(this.kWallTexture);
         engine.texture.unload(this.kTargetTexture);
+        //engine.texture.unload(this.kDyePackTexture);
     }
 
     init() {
