@@ -24,7 +24,8 @@ class MyGame extends engine.Scene {
         this.mMsg = null;
         this.mShapeMsg = null;
 
-        this.mAllObjs = null;
+        this.mPatrols = [];
+        this.mPatrolNum = 25;
         this.mPlatforms = null;
         this.mBounds = null;
         this.mCollisionInfos = [];
@@ -67,8 +68,8 @@ class MyGame extends engine.Scene {
     init() {
         // Step A: set up the cameras
         this.mCamera = new engine.Camera(
-            vec2.fromValues(50, 40), // position of the camera
-            100,                     // width of camera
+            vec2.fromValues(100, 75), // position of the camera
+            200,                     // width of camera
             [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
         );
         this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
@@ -81,25 +82,21 @@ class MyGame extends engine.Scene {
         this.createBounds();  // added to mPlatforms
 
         this.mHero = new Hero(this.kMinionSprite);
-        this.mHead = new Head(this.kMinionSprite);
-        this.mTop = new Wing(this.kMinionSprite,60,70);
-        this.mBottom = new Wing(this.kMinionSprite,60,50);
         this.mAllObjs.addToSet(this.mHero);
-        this.mAllObjs.addToSet(this.mHead);
-        this.mAllObjs.addToSet(this.mTop);
-        this.mAllObjs.addToSet(this.mBottom);
         this.mCurrentObj = 0;
                 
         // particle systems
         this.mParticles = new engine.ParticleSet();
 
-        let y = 70;
-        let x = 10;
-        for (let i = 1; i <= 5; i++) {
-            let m = new Minion(this.kMinionSprite, x, y, ((i % 2) !== 0));
-            this.mParticles.addEmitterAt(x, y, 200, _createParticle);
-            x += 20;
-            this.mAllObjs.addToSet(m);
+        for (let i = 0; i < this.mPatrolNum; i++) {
+            let x = 5 + Math.random()*190;
+            let y =5+Math.random()*140;
+            let h = new Head(this.kMinionSprite, x, y);
+            let t = new Wing(this.kMinionSprite, x+10, y+6, h, true);
+            let b = new Wing(this.kMinionSprite, x+10, y-6, h, false);
+            this.mAllObjs.addToSet(h);
+            this.mAllObjs.addToSet(t);
+            this.mAllObjs.addToSet(b);
         }
 
         this.mMsg = new engine.FontRenderable("Status Message");
