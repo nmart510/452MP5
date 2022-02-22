@@ -131,6 +131,7 @@ class MyGame extends engine.Scene {
             let h = new Head(this.kMinionSprite, x, y);
             let t = new Wing(this.kMinionSprite, x+10, y+6, h, true);
             let b = new Wing(this.kMinionSprite, x+10, y-6, h, false);
+            h.setWings(t,b);
             this.mAllObjs.addToSet(h);
             this.mAllObjs.addToSet(t);
             this.mAllObjs.addToSet(b);

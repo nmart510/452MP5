@@ -34,6 +34,13 @@ class RigidRectangle extends RigidShape {
             this.mInertia = 1 / this.mInertia;
         }
     }
+    setShapeSizeTo(w,h){
+        this.mWidth = w;
+        this.mHeight = h;
+        this.setVertices();
+        this.rotateVertices();
+        this.updateInertia();
+    }
 
     incShapeSizeBy(dt) {
         this.mHeight += dt;
