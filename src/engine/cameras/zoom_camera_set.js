@@ -8,25 +8,27 @@ class ZoomCameraSet extends GameObjectSet {
         super();
         this.mCameraSet = [];
     }
-    //initially add the cameras all at once
     addCamera(camera1, camera2, camera3, camera4) {
         this.mCameraSet.push(camera1, camera2, camera3, camera4);
     }
     //add a new camera
-    addNewCamera(wcCenter, wcWidth, viewportArr, bound) {
-        let c = new ZoomCamera(wcCenter, wcWidth, viewportArr, bound);
-        this.mCameraSet.push(c);
+    addNewCamera(camera) {
+        this.mCameraSet.push(camera);
     }
     //add am existing camera
     addCameraAt(camera, index) {
-        this.mCameraArray[index] = camera;
+        this.mCameraSet[index] = camera;
     }
     removeCameraAt(index) {
-        this.mCameraArray.splice(index, 1);
+        this.mCameraSet.splice(index, 1);
+    }
+    getCameraIndex(camera) {
+        return this.mCameraSet.indexOf(camera);
     }
     setCameraMatrix() {
         for(let i = 0; i < this.mCameraSet.length; i++) {
-            this.mCameraSet[i].setViewAndCameraMatrix();
+            if(this.mCameraSet[i] !== null)
+                this.mCameraSet[i].setViewAndCameraMatrix();
         }
     }
 }

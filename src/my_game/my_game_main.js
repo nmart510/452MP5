@@ -17,7 +17,7 @@ class MyGame extends engine.Scene {
         this.kPlatformTexture = "assets/platform.png";
         this.kWallTexture = "assets/wall.png";
         this.kTargetTexture = "assets/target.png";
-
+        this.kBg = "assets/Background.png";
         // The camera to view the scene
         this.mCamera = null;
         this.mCameraSet = null;
@@ -28,6 +28,8 @@ class MyGame extends engine.Scene {
 
         this.mMsg = null;
         this.mShapeMsg = null;
+
+        this.mBg = null;
 
         this.mPatrols = [];
         this.mPatrolNum = 25;
@@ -61,6 +63,7 @@ class MyGame extends engine.Scene {
         engine.texture.load(this.kPlatformTexture);
         engine.texture.load(this.kWallTexture);
         engine.texture.load(this.kTargetTexture);
+        engine.texture.load(this.kBg);
     }
 
     unload() {
@@ -68,6 +71,7 @@ class MyGame extends engine.Scene {
         engine.texture.unload(this.kPlatformTexture);
         engine.texture.unload(this.kWallTexture);
         engine.texture.unload(this.kTargetTexture);
+        engine.texture.unload(this.kBg);
     }
 
     init() {
@@ -77,6 +81,11 @@ class MyGame extends engine.Scene {
             200,                     // width of camera
             [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
         );
+
+        //background
+        this.mBg = new engine.TextureRenderable(this.kBg);
+        this.mBg.getXform().setSize(200, 200);
+        this.mBg.getXform().setPosition(100, 75);
 
         //smaller viewports
         this.mCameraSet = new engine.ZoomCameraSet();
@@ -156,9 +165,10 @@ class MyGame extends engine.Scene {
         engine.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
         this.mCamera.setViewAndCameraMatrix();
-
-        this.mPlatforms.draw(this.mCamera);
+        this.mBg.draw(this.mCamera);
+        //this.mPlatforms.draw(this.mCamera);
         this.mAllObjs.draw(this.mCamera);
+        
 
         this.mParticles.draw(this.mCamera);
         if (this.mPSDrawBounds)
@@ -171,9 +181,9 @@ class MyGame extends engine.Scene {
         this.mCollisionInfos = [];
         }
 
-        this.mTarget.draw(this.mCamera);
-        this.mMsg.draw(this.mCamera);   
-        this.mShapeMsg.draw(this.mCamera);
+        //this.mTarget.draw(this.mCamera);
+        //this.mMsg.draw(this.mCamera);   
+        //this.mShapeMsg.draw(this.mCamera);
 
         //set the camera matrix and draw to it after this.
         this.mCameraSet.setCameraMatrix();
@@ -191,7 +201,7 @@ class MyGame extends engine.Scene {
         let kBoundDelta = 0.1;
 
         this.mAllObjs.update(this.mCamera);
-        this.mPlatforms.update(this.mCamera);
+        //this.mPlatforms.update(this.mCamera);
 
         if (engine.input.isKeyClicked(engine.input.keys.P)) {
             engine.physics.togglePositionalCorrection();
@@ -212,6 +222,46 @@ class MyGame extends engine.Scene {
             this.mCurrentObj += 1;
             if (this.mCurrentObj >= this.mAllObjs.size())
                 this.mCurrentObj = 0;
+        }
+
+        //viewport manipulation
+        //hero cam
+        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
+            let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.mHeroCam);
+            }
+        }
+        //dye pack cameras
+        if (engine.input.isKeyClicked(engine.input.keys.One)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam1);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam1);
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam2);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam2);
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam3);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam3);
+            }
         }
 
         let obj = this.mAllObjs.getObjectAt(this.mCurrentObj);
@@ -248,12 +298,12 @@ class MyGame extends engine.Scene {
                 this.mParticles.addToSet(par);
             }
         }
-        if (engine.input.isKeyClicked(engine.input.keys.One))
+        /*if (engine.input.isKeyClicked(engine.input.keys.One))
             this.mPSCollision = !this.mPSCollision;
         if (this.mPSCollision) {
             engine.particleSystem.resolveRigidShapeSetCollision(this.mAllObjs, this.mParticles);
             engine.particleSystem.resolveRigidShapeSetCollision(this.mPlatforms, this.mParticles);
-        }
+        }*/
 
         obj.keyControl();
         this.drawControlUpdate();
@@ -284,17 +334,17 @@ class MyGame extends engine.Scene {
         if (engine.input.isKeyClicked(engine.input.keys.T)) {
             this.mDrawTexture = !this.mDrawTexture;
             this.mAllObjs.toggleDrawRenderable();
-            this.mPlatforms.toggleDrawRenderable();
+            //this.mPlatforms.toggleDrawRenderable();
         }
         if (engine.input.isKeyClicked(engine.input.keys.R)) {
             this.mDrawRigidShape = !this.mDrawRigidShape;
             this.mAllObjs.toggleDrawRigidShape();
-            this.mPlatforms.toggleDrawRigidShape();
+            //this.mPlatforms.toggleDrawRigidShape();
         }
         if (engine.input.isKeyClicked(engine.input.keys.B)) {
             this.mDrawBounds = !this.mDrawBounds;
             this.mAllObjs.toggleDrawBound();
-            this.mPlatforms.toggleDrawBound();
+            //this.mPlatforms.toggleDrawBound();
         }
     }
 }
