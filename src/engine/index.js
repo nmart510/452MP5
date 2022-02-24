@@ -35,6 +35,8 @@ import Material from "./material.js";
 
 // camera and related supports
 import Camera from "./cameras/camera.js";
+import ZoomCamera from "./cameras/zoom_camera.js";
+import ZoomCameraSet from "./cameras/zoom_camera_set.js";
 
 // renderables 
 import Renderable from "./renderables/renderable.js";
@@ -117,7 +119,7 @@ export default {
     Lerp, LerpVec2, Oscillate, Shake, ShakeVec2,
 
     // Util classes
-    Camera, Scene, Transform, BoundingBox, Material,
+    Camera, Scene, Transform, BoundingBox, Material, ZoomCamera, ZoomCameraSet,
     
     // Renderables
     Renderable, TextureRenderable, SpriteRenderable, SpriteAnimateRenderable, 

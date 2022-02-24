@@ -23,11 +23,19 @@ class MyGame extends engine.Scene {
 
         // The camera to view the scene
         this.mCamera = null;
+        this.mCameraSet = null;
+        this.mHeroCam = null;
+        this.mSmallCam1 = null;
+        this.mSmallCam2 = null;
+        this.mSmallCam3 = null;
 
         this.mMsg = null;
         this.mShapeMsg = null;
 
-        this.mAllObjs = null;
+        this.mBg = null;
+
+        this.mPatrols = [];
+        this.mPatrolNum = 25;
         this.mPlatforms = null;
         this.mBounds = null;
         this.mCollisionInfos = [];
@@ -72,10 +80,47 @@ class MyGame extends engine.Scene {
     init() {
         // Step A: set up the cameras
         this.mCamera = new engine.Camera(
-            vec2.fromValues(50, 40), // position of the camera
-            100,                     // width of camera
+            vec2.fromValues(100, 75), // position of the camera
+            200,                     // width of camera
             [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
         );
+
+        //background
+        this.mBg = new engine.TextureRenderable(this.kBg);
+        this.mBg.getXform().setSize(200, 200);
+        this.mBg.getXform().setPosition(100, 75);
+
+        //smaller viewports
+        this.mCameraSet = new engine.ZoomCameraSet();
+
+        //small viewports
+        this.mHeroCam = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            15,
+            [0,600,200,200]
+        );
+        //the first dye pack camera
+        this.smallCam1 = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            6,
+            [200,600,200,200]
+        );
+        this.smallCam2 = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            6,
+            [400,600,200,200]
+        );
+        this.smallCam3 = new engine.ZoomCamera(
+            vec2.fromValues(50,40),
+            6,
+            [600,600,200,200]
+        );
+        this.mCameraSet.addCamera(this.mHeroCam, this.smallCam1, this.smallCam2, this.smallCam3);
+        this.mHeroCam.setBackgroundColor([0,0,0,1]);
+        this.smallCam1.setBackgroundColor([1,1,1,1]);
+        this.smallCam2.setBackgroundColor([0,0,0,1]);
+        this.smallCam3.setBackgroundColor([1,1,1,1]);
+
         this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
         // sets the background to gray
         engine.defaultResources.setGlobalAmbientIntensity(3);
@@ -86,25 +131,22 @@ class MyGame extends engine.Scene {
         this.createBounds();  // added to mPlatforms
 
         this.mHero = new Hero(this.kMinionSprite);
-        this.mHead = new Head(this.kMinionSprite);
-        this.mTop = new Wing(this.kMinionSprite,60,70);
-        this.mBottom = new Wing(this.kMinionSprite,60,50);
         this.mAllObjs.addToSet(this.mHero);
-        this.mAllObjs.addToSet(this.mHead);
-        this.mAllObjs.addToSet(this.mTop);
-        this.mAllObjs.addToSet(this.mBottom);
         this.mCurrentObj = 0;
                 
         // particle systems
         this.mParticles = new engine.ParticleSet();
 
-        let y = 70;
-        let x = 10;
-        for (let i = 1; i <= 5; i++) {
-            let m = new Minion(this.kMinionSprite, x, y, ((i % 2) !== 0));
-            this.mParticles.addEmitterAt(x, y, 200, _createParticle);
-            x += 20;
-            this.mAllObjs.addToSet(m);
+        for (let i = 0; i < this.mPatrolNum; i++) {
+            let x = 5 + Math.random()*190;
+            let y =5+Math.random()*140;
+            let h = new Head(this.kMinionSprite, x, y);
+            let t = new Wing(this.kMinionSprite, x+10, y+6, h, true);
+            let b = new Wing(this.kMinionSprite, x+10, y-6, h, false);
+            h.setWings(t,b);
+            this.mAllObjs.addToSet(h);
+            this.mAllObjs.addToSet(t);
+            this.mAllObjs.addToSet(b);
         }
 
         this.mMsg = new engine.FontRenderable("Status Message");
@@ -126,9 +168,10 @@ class MyGame extends engine.Scene {
         engine.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
         this.mCamera.setViewAndCameraMatrix();
-
-        this.mPlatforms.draw(this.mCamera);
+        this.mBg.draw(this.mCamera);
+        //this.mPlatforms.draw(this.mCamera);
         this.mAllObjs.draw(this.mCamera);
+        
 
         this.mParticles.draw(this.mCamera);
         if (this.mPSDrawBounds)
@@ -141,9 +184,12 @@ class MyGame extends engine.Scene {
         this.mCollisionInfos = [];
         }
 
-        this.mTarget.draw(this.mCamera);
-        this.mMsg.draw(this.mCamera);   
-        this.mShapeMsg.draw(this.mCamera);
+        //this.mTarget.draw(this.mCamera);
+        //this.mMsg.draw(this.mCamera);   
+        //this.mShapeMsg.draw(this.mCamera);
+
+        //set the camera matrix and draw to it after this.
+        this.mCameraSet.setCameraMatrix();
     }
 
     incShapeSize(obj, delta) {
@@ -158,7 +204,7 @@ class MyGame extends engine.Scene {
         let kBoundDelta = 0.1;
 
         this.mAllObjs.update(this.mCamera);
-        this.mPlatforms.update(this.mCamera);
+        //this.mPlatforms.update(this.mCamera);
 
         if (engine.input.isKeyClicked(engine.input.keys.P)) {
             engine.physics.togglePositionalCorrection();
@@ -179,6 +225,46 @@ class MyGame extends engine.Scene {
             this.mCurrentObj += 1;
             if (this.mCurrentObj >= this.mAllObjs.size())
                 this.mCurrentObj = 0;
+        }
+
+        //viewport manipulation
+        //hero cam
+        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
+            let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.mHeroCam);
+            }
+        }
+        //dye pack cameras
+        if (engine.input.isKeyClicked(engine.input.keys.One)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam1);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam1);
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam2);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam2);
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam3);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam3);
+            }
         }
 
         let obj = this.mAllObjs.getObjectAt(this.mCurrentObj);
@@ -215,12 +301,12 @@ class MyGame extends engine.Scene {
                 this.mParticles.addToSet(par);
             }
         }
-        if (engine.input.isKeyClicked(engine.input.keys.One))
+        /*if (engine.input.isKeyClicked(engine.input.keys.One))
             this.mPSCollision = !this.mPSCollision;
         if (this.mPSCollision) {
             engine.particleSystem.resolveRigidShapeSetCollision(this.mAllObjs, this.mParticles);
             engine.particleSystem.resolveRigidShapeSetCollision(this.mPlatforms, this.mParticles);
-        }
+        }*/
 
         obj.keyControl();
         this.drawControlUpdate();
@@ -251,17 +337,17 @@ class MyGame extends engine.Scene {
         if (engine.input.isKeyClicked(engine.input.keys.T)) {
             this.mDrawTexture = !this.mDrawTexture;
             this.mAllObjs.toggleDrawRenderable();
-            this.mPlatforms.toggleDrawRenderable();
+            //this.mPlatforms.toggleDrawRenderable();
         }
         if (engine.input.isKeyClicked(engine.input.keys.R)) {
             this.mDrawRigidShape = !this.mDrawRigidShape;
             this.mAllObjs.toggleDrawRigidShape();
-            this.mPlatforms.toggleDrawRigidShape();
+            //this.mPlatforms.toggleDrawRigidShape();
         }
         if (engine.input.isKeyClicked(engine.input.keys.B)) {
             this.mDrawBounds = !this.mDrawBounds;
             this.mAllObjs.toggleDrawBound();
-            this.mPlatforms.toggleDrawBound();
+            //this.mPlatforms.toggleDrawBound();
         }
     }
 }

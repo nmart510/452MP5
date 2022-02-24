@@ -8,22 +8,15 @@
 
 import engine from "../../engine/index.js";
 import WASDObj from "./wasd_obj.js";
-
-let kMinionWidth = 6 * 0.5;
-let kMinionHeight = 4.8 * 0.5;
-let kMinionRandomSize = 5;
+import LerpVec2 from "../../engine/utils/lerp_vec2.js";
 
 class Wing extends WASDObj {
-    constructor(spriteTexture, atX, atY) {
+    constructor(spriteTexture, atX, atY, parent, isTop) {
         super();
-        let w = kMinionWidth + Math.random() * kMinionRandomSize;
-        let h = kMinionHeight + Math.random() * kMinionRandomSize;
-
         this.mRenderComponent = new engine.SpriteAnimateRenderable(spriteTexture);
         this.mRenderComponent.setColor([1, 1, 1, 0]);
         this.mRenderComponent.getXform().setPosition(atX, atY);
-        this.mRenderComponent.getXform().setSize(w, h);
-        this.mRenderComponent.getXform().setRotationInDegree((Math.random() - 0.5) * 70);
+        this.mRenderComponent.getXform().setSize(10, 8);
         this.mRenderComponent.setSpriteSequence(512, 0,      // first element pixel position: top-left 512 is top of image, 0 is left of image
             204, 164,   // width x height in pixels
             5,          // number of elements in this sequence
@@ -34,18 +27,25 @@ class Wing extends WASDObj {
 
 
         let r;
-        r = new engine.RigidRectangle(this.getXform(), w, h);
-        let vx = (Math.random() - 0.5);
-        let vy = (Math.random() - 0.5);
-        let speed = 20 + Math.random() * 10;
-        r.setVelocity(vx * speed, vy * speed);
+        r = new engine.RigidRectangle(this.getXform(), 10, 8);
         this.setRigidBody(r);
         //this.toggleDrawRenderable();
         this.toggleDrawRigidShape();
+        this.Parent = parent;
+        this.IsTop = isTop;
     }
 
 
     update(aCamera) {
+        let coord = new LerpVec2(this.mRenderComponent.getXform().getPosition(),120,.05);
+        let final;
+        if (this.IsTop)
+            final = vec2.fromValues(this.Parent.getXform().getXPos()+10,this.Parent.getXform().getYPos()+6);
+        else
+            final = vec2.fromValues(this.Parent.getXform().getXPos()+10,this.Parent.getXform().getYPos()-6);
+
+        coord.setFinal(final);
+        coord._interpolateValue();
         super.update();
         // remember to update renderable's animation
         this.mRenderComponent.updateAnimation();
