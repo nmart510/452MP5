@@ -108,6 +108,9 @@ function onMouseMove(event) {
         mMousePosX = x;
         mMousePosY = mCanvas.height - 1 - y;
         inside = true;
+    } else {
+        mMousePosX = -1;
+        mMousePosY = -1;
     }
     return inside;
 }

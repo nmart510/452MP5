@@ -134,7 +134,7 @@ class MyGame extends engine.Scene {
         this.createBounds();  // added to mPlatforms
 
         this.mHero = new Hero(this.kMinionSprite);
-        this.mHero.toggleDrawRenderable();
+        //this.mHero.toggleDrawRenderable();
         this.mAllObjs.addToSet(this.mHero);
         this.mCurrentObj = 0;
                 
@@ -294,6 +294,21 @@ class MyGame extends engine.Scene {
             this.mParticles.addEmitterAt(x, y, 200, _createParticle);
         }
         
+        // Hero Movement System
+        let hero = this.mAllObjs.getObjectAt(0); // Hero should always be first object loaded
+        //console.log(hero.getXform().getPosition());
+        if (this.mCamera.isMouseInViewport()) {
+            hero.mouseControl(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());   
+        }
+
+        if(engine.input.isKeyClicked(engine.input.keys.Q)) {
+            hero.hitAnimation();
+        }
+
+        if(engine.input.isKeyClicked(engine.input.keys.Space)) {
+            console.log("Spawn DYEPACK");
+        }
+
         // Particle System
         this.mParticles.update();
         if (engine.input.isKeyClicked(engine.input.keys.E))
@@ -304,6 +319,7 @@ class MyGame extends engine.Scene {
                 this.mParticles.addToSet(par);
             }
         }
+
         /*if (engine.input.isKeyClicked(engine.input.keys.One))
             this.mPSCollision = !this.mPSCollision;
         if (this.mPSCollision) {
@@ -311,7 +327,6 @@ class MyGame extends engine.Scene {
             engine.particleSystem.resolveRigidShapeSetCollision(this.mPlatforms, this.mParticles);
         }*/
 
-        obj.mouseControl();
         this.drawControlUpdate();
 
         if (this.mDrawCollisionInfo)
