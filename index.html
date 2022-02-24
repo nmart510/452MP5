@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 10.3: The Particles Emitters Project </title>
+        <title>MP5 Behaviors, Bounds, and Interpolation </title>
         <link rel ="icon" type ="image/x-icon" href="./assets/favicon.png">
 
         <!-- the following says there are javascript source code contained in 
@@ -15,56 +15,46 @@
     </head>
 
      <body>    
-        <canvas id="GLCanvas" width="800" height="800">
+        <canvas id="GLCanvas" width="800" height="600">
             <!-- GLCanvas is the area we will draw in -->
             Your browser does not support the HTML5 canvas.
             <!-- this message will show only if WebGL clearing failed -->
         </canvas>
 
         <div style="padding-left:10px">
-        <b>Q</b>: To add a particle emitter at the current mouse position <br>
-        <b>E</b>: To toggle drawing of particle bounds <br>
-        <b>1</b>: to toggle particle/rigid-shape collisions <br>
         </div>
         <p></p>
         <div style="display: table" >
           <div style="float: left; padding-left: 10px">
-              <b>Behavior Controls:</b>
+              <b>Patrol Controls:</b>
               <ul>
                   <li>
-                      <b>P</b>: Penetration resolution on/off </li>
+                      <b>P</b>: Auto spawning on/off </li>
                   <li>
-                      <b>V</b>: Motion on/off </li>
+                      <b>C</b>: Spawns a new patrol </li>
                   <li>
-                      <b>H</b>: Inject random velocity to all objects </li>
+                      <b>B</b>: Draw the bounding box of all patrols </li>
                   <li>
-                      <b>G</b>: Create new Rectangle/Circle (randomly)</li>
+                      <b>J</b>: Trigger the hit animation for head objects</li>
               </ul>
-              <b>Selected Objet Controls:</b>
+              <b>Camera Controls:</b>
               <ul>
                 <li>
-                    <b>Left/Right</b>: Sequence through selected object </li>  
+                    <b>0</b>: Toggle the camera which focuses on hero </li>  
                 <li>
-                    <b>WASD-ZX</b>: Move/Rotate(ZX) selected object </li>
-                <li>
-                    <b>YU</b>: Inc/Dec RigidShape size (not the Renderable) </li>
-                <li>
-                    <b>Up/Down + MNF</b>: Increase/Decrease Mass/Restitution/Friction</li>
+                    <b>1/2/3</b>: Toggle the other zoom camera objects </li>
               </ul>
           </div>
           
           <div style="float: left">
-              <b>Drawing Controls:</b>
+              <b>Hero Controls:</b>
               <ul>
                   <li>
-                      <b>C</b>: CollisionInfo&nbsp;</li>  
+                      <b>Space</b>: Spawn a DyePack at currrent hero position</li>
                   <li>
-                      <b>T</b>: Texture&nbsp; </li>
+                      <b>Cursor</b>: Hero will try to follow the cursor</li>
                   <li>
-                      <b>R</b>: RigidShape&nbsp;  </li>
-                  <li>
-                      <b>B</b>: Primitive Bounds (only when RigidShape shows)&nbsp; </li>
-
+                      <b>Q</b>: Trigger the hit animation for Hero</li>
               </ul>
           </div>
       </div>
