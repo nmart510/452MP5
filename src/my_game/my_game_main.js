@@ -16,9 +16,10 @@ class MyGame extends engine.Scene {
     constructor() {
         super();
         this.kMinionSprite = "assets/minion_sprite.png";
-        this.kPlatformTexture = "assets/platform.png";
-        this.kWallTexture = "assets/wall.png";
-        this.kTargetTexture = "assets/target.png";
+        this.kPlatformTexture = "assets/platform.png"; //Remove?
+        this.kWallTexture = "assets/wall.png"; //Remove?
+        this.kTargetTexture = "assets/target.png"; //Remove?
+        this.kBg = "assets/background.png";
         //this.kDyePackTexture = "";
 
         // The camera to view the scene
@@ -66,6 +67,7 @@ class MyGame extends engine.Scene {
         engine.texture.load(this.kPlatformTexture);
         engine.texture.load(this.kWallTexture);
         engine.texture.load(this.kTargetTexture);
+        engine.texture.load(this.kBg);
         //engine.texture.load(this.kDyePackTexture);
     }
 
@@ -74,6 +76,7 @@ class MyGame extends engine.Scene {
         engine.texture.unload(this.kPlatformTexture);
         engine.texture.unload(this.kWallTexture);
         engine.texture.unload(this.kTargetTexture);
+        engine.texture.load(this.kBg);
         //engine.texture.unload(this.kDyePackTexture);
     }
 
@@ -131,6 +134,7 @@ class MyGame extends engine.Scene {
         this.createBounds();  // added to mPlatforms
 
         this.mHero = new Hero(this.kMinionSprite);
+        this.mHero.toggleDrawRenderable();
         this.mAllObjs.addToSet(this.mHero);
         this.mCurrentObj = 0;
                 
@@ -171,7 +175,6 @@ class MyGame extends engine.Scene {
         this.mBg.draw(this.mCamera);
         //this.mPlatforms.draw(this.mCamera);
         this.mAllObjs.draw(this.mCamera);
-        
 
         this.mParticles.draw(this.mCamera);
         if (this.mPSDrawBounds)
@@ -308,7 +311,7 @@ class MyGame extends engine.Scene {
             engine.particleSystem.resolveRigidShapeSetCollision(this.mPlatforms, this.mParticles);
         }*/
 
-        obj.keyControl();
+        obj.mouseControl();
         this.drawControlUpdate();
 
         if (this.mDrawCollisionInfo)
