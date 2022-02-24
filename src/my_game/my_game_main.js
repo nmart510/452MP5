@@ -142,8 +142,8 @@ class MyGame extends engine.Scene {
         this.mParticles = new engine.ParticleSet();
 
         for (let i = 0; i < this.mPatrolNum; i++) {
-            let x = 5 + Math.random()*190;
-            let y =5+Math.random()*140;
+            let x = 10 + Math.random()*170;
+            let y = 15 + Math.random()*110;
             let h = new Head(this.kMinionSprite, x, y);
             let t = new Wing(this.kMinionSprite, x+10, y+6, h, true);
             let b = new Wing(this.kMinionSprite, x+10, y-6, h, false);

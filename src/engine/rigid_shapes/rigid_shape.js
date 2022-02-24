@@ -7,7 +7,7 @@
 
 import * as debugDraw from "../core/debug_draw.js";
 
-let kShapeColor = [0, 0, 0, 1];
+let kShapeColor = [1, 1, 1, 1];
 let kBoundColor = [1, 1, 1, 1];
 
 import * as physics from "../components/physics.js";

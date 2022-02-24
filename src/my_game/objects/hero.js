@@ -27,8 +27,8 @@ class Hero extends engine.GameObject {
     mouseControl() {
         let xform = this.getXform();
         if (true) {
-            console.log(engine.input.isButtonPressed(engine.input.eMouseButton.eLeft))
-            console.log(engine.input.getMousePosX() + " / " + engine.input.getMousePosY());
+            //console.log(engine.input.isButtonPressed(engine.input.eMouseButton.eLeft))
+            //console.log(engine.input.getMousePosX() + " / " + engine.input.getMousePosY());
         }
         /*
         if (engine.input.isKeyPressed(engine.input.keys.W)) {

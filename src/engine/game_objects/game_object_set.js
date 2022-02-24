@@ -27,10 +27,10 @@ class GameObjectSet {
             this.mSet.splice(index, 1);
     }
 
-    update() {
+    update(aCamera) {
         let i;
         for (i = 0; i < this.mSet.length; i++) {
-            this.mSet[i].update();
+            this.mSet[i].update(aCamera);
         }
     }
 
