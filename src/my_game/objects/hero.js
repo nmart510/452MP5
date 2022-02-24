@@ -41,7 +41,7 @@ class Hero extends engine.GameObject {
         //xform.setPosition(position[0] - xDelta, position[1] - yDelta);
     }
 
-    hitAnimation() {
+    hit() {
         //TODO: Insert animation here
         console.log("Hero has been hit!");
     }

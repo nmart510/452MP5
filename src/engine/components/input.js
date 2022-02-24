@@ -109,8 +109,9 @@ function onMouseMove(event) {
         mMousePosY = mCanvas.height - 1 - y;
         inside = true;
     } else {
-        mMousePosX = -1;
-        mMousePosY = -1;
+        //TODO: Consider adding closing bounds to the onMouseMove call?
+        //mMousePosX = -1;
+        //mMousePosY = -1;
     }
     return inside;
 }

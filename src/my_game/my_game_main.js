@@ -20,7 +20,6 @@ class MyGame extends engine.Scene {
         this.kWallTexture = "assets/wall.png"; //Remove?
         this.kTargetTexture = "assets/target.png"; //Remove?
         this.kBg = "assets/background.png";
-        //this.kDyePackTexture = "";
 
         // The camera to view the scene
         this.mCamera = null;
@@ -36,7 +35,7 @@ class MyGame extends engine.Scene {
         this.mBg = null;
 
         this.mPatrols = [];
-        this.mPatrolNum = 25;
+        this.mPatrolNum = 5;
         this.mPlatforms = null;
         this.mBounds = null;
         this.mCollisionInfos = [];
@@ -68,7 +67,6 @@ class MyGame extends engine.Scene {
         engine.texture.load(this.kWallTexture);
         engine.texture.load(this.kTargetTexture);
         engine.texture.load(this.kBg);
-        //engine.texture.load(this.kDyePackTexture);
     }
 
     unload() {
@@ -77,7 +75,6 @@ class MyGame extends engine.Scene {
         engine.texture.unload(this.kWallTexture);
         engine.texture.unload(this.kTargetTexture);
         engine.texture.load(this.kBg);
-        //engine.texture.unload(this.kDyePackTexture);
     }
 
     init() {
@@ -134,7 +131,7 @@ class MyGame extends engine.Scene {
         this.createBounds();  // added to mPlatforms
 
         this.mHero = new Hero(this.kMinionSprite);
-        //this.mHero.toggleDrawRenderable();
+        //this.mHero.toggleDrawRenderable(); //Seems to break the renderable
         this.mAllObjs.addToSet(this.mHero);
         this.mCurrentObj = 0;
                 
@@ -296,19 +293,22 @@ class MyGame extends engine.Scene {
         
         // Hero Movement System
         let hero = this.mAllObjs.getObjectAt(0); // Hero should always be first object loaded
-        //console.log(hero.getXform().getPosition());
         if (this.mCamera.isMouseInViewport()) {
             hero.mouseControl(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());   
         }
-
         if(engine.input.isKeyClicked(engine.input.keys.Q)) {
             hero.hitAnimation();
         }
 
+        // Spawn in DyePack projectiles
         if(engine.input.isKeyClicked(engine.input.keys.Space)) {
-            console.log("Spawn DYEPACK");
+            let heroXForm = hero.getXform();
+            let projectile = new DyePack(this.kMinionSprite, heroXForm.getXPos()+5, heroXForm.getYPos()+4, true);
+            projectile.toggleDrawRenderable();
+            this.mAllObjs.addToSet(projectile); 
         }
 
+        
         // Particle System
         this.mParticles.update();
         if (engine.input.isKeyClicked(engine.input.keys.E))
