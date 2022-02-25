@@ -7,16 +7,27 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 import engine from "../../engine/index.js";
+import LerpVec2 from "../../engine/utils/lerp_vec2.js";
+import Oscillate from "../../engine/utils/oscillate.js";
 
 class Hero extends engine.GameObject {
     constructor(spriteTexture) {
         super(null);
         this.kDelta = 0.05;
+
+        this.isHitAnimated = false;
+        this.heroOscillateX = new Oscillate(4.5, 4, 60);
+        this.heroOscillateY = new Oscillate(6, 4, 60);
+        this.timesOscillated = 0;
+        this.beforeHitSize = [0, 0];
+
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
         this.mRenderComponent.setColor([1, 1, 1, 0]);
         this.mRenderComponent.getXform().setPosition(50, 50);
         this.mRenderComponent.getXform().setSize(9, 12);
         this.mRenderComponent.setElementPixelPositions(0, 120, 0, 180);
+
+        this.lerp = new LerpVec2(this.mRenderComponent.getXform().getPosition(), 120, this.kDelta);
 
         let r = new engine.RigidRectangle(this.getXform(), 9, 12);
         this.setRigidBody(r);
@@ -25,25 +36,41 @@ class Hero extends engine.GameObject {
     }
 
     mouseControl(mouseX, mouseY) {
-        let xform = this.getXform();
-        let position = xform.getPosition();
-        let xDelta = (mouseX - position[0])*this.kDelta;
-        let yDelta = (mouseY - position[1])*this.kDelta; 
-        xform.setPosition(position[0] + xDelta, position[1] + yDelta);
-        
-        // ALTERNATE X-FORM based on w/o intrpolation?
-        //let distance = Math.sqrt(Math.pow((position[0] - mouseX), 2) + Math.pow((position[1] - mouseY), 2));
-        // Q: position[0], position[1]
-        // P: mouseX, mouseY
-        // N: position[0] + mouseX, position[1] - mouseY
-        //let xDelta = this.kDelta * (position[0] - mouseX) / distance;
-        //let yDelta = this.kDelta * (position[1] - mouseY) / distance; 
-        //xform.setPosition(position[0] - xDelta, position[1] - yDelta);
+        this.lerp.setFinal([mouseX, mouseY])
     }
 
     hit() {
-        //TODO: Insert animation here
-        console.log("Hero has been hit!");
+        let xform = this.getXform();
+        //console.log("Size: " + xform.getSize())
+        let isDone = false;
+        
+        if(!this.isHitAnimated) {
+            this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
+            this.heroOscillateX.reStart();
+            this.heroOscillateY.reStart();
+            this.isHitAnimated = true;
+        }
+        if (this.isHitAnimated) {
+            xform.setSize(this.beforeHitSize[0], this.beforeHitSize[1]);
+            xform.incWidthBy(this.heroOscillateX.getNext())
+            xform.incHeightBy(this.heroOscillateY.getNext())
+            isDone = this.heroOscillateX.done();
+        }
+        if(isDone) { //TODO: Redundant?
+            this.isHitAnimated = false;
+            xform.setSize(this.beforeHitSize[0], this.beforeHitSize[1]);
+        }
+        return isDone;
+    }
+
+    update() {
+        if(this.isHitAnimated) {
+            this.hit();
+        }
+        this.lerp.update();
+        let xform = this.getXform();
+        let newPosition = this.lerp.get();
+        xform.setPosition(newPosition[0], newPosition[1]);
     }
 }
 

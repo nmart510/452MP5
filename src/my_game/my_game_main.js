@@ -297,8 +297,10 @@ class MyGame extends engine.Scene {
             hero.mouseControl(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());   
         }
         if(engine.input.isKeyClicked(engine.input.keys.Q)) {
-            hero.hitAnimation();
+            hero.hit();
         }
+
+        hero.update(); //Used to cycle through hero updates 
 
         // Spawn in DyePack projectiles
         if(engine.input.isKeyClicked(engine.input.keys.Space)) {
