@@ -8,9 +8,6 @@ class ZoomCameraSet extends GameObjectSet {
         super();
         this.mCameraSet = [];
     }
-    addCamera(camera1, camera2, camera3, camera4) {
-        this.mCameraSet.push(camera1, camera2, camera3, camera4);
-    }
     //add a new camera
     addNewCamera(camera) {
         this.mCameraSet.push(camera);

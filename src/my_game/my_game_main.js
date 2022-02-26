@@ -114,7 +114,7 @@ class MyGame extends engine.Scene {
             6,
             [600,600,200,200]
         );
-        this.mCameraSet.addCamera(this.mHeroCam, this.smallCam1, this.smallCam2, this.smallCam3);
+        
         this.mHeroCam.setBackgroundColor([0,0,0,1]);
         this.smallCam1.setBackgroundColor([1,1,1,1]);
         this.smallCam2.setBackgroundColor([0,0,0,1]);
@@ -187,6 +187,23 @@ class MyGame extends engine.Scene {
 
         //set the camera matrix and draw to it after this.
         this.mCameraSet.setCameraMatrix();
+
+        this.mBg.draw(this.mHeroCam);
+        this.mAllObjs.draw(this.mHeroCam);
+        
+        if(this.smallCam1 !== null) {
+            this.mBg.draw(this.smallCam1);
+            this.mAllObjs.draw(this.smallCam1);
+        }
+        
+        if(this.smallCam2 !== null) {
+            this.mBg.draw(this.smallCam2);
+            this.mAllObjs.draw(this.smallCam2);
+        }
+        if(this.mSmallCam3 !== null) {
+            this.mBg.draw(this.smallCam3);
+            this.mAllObjs.draw(this.smallCam3);
+        }
     }
 
     incShapeSize(obj, delta) {
@@ -342,6 +359,12 @@ class MyGame extends engine.Scene {
         this.mMsg.setText(msg);
 
         this.mShapeMsg.setText(obj.getRigidBody().getCurrentState());
+
+        this.mHeroCam.update();
+        this.smallCam1.update();
+        this.smallCam2.update();
+        this.smallCam3.update();
+        this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
     }
 
     drawControlUpdate() {
