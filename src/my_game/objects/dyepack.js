@@ -17,8 +17,6 @@ class DyePack extends engine.GameObject {
 
         this.isHitAnimated = false;
 
-        this.set = null;
-
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
         this.mRenderComponent.setColor([1, 1, 1, 0]);
         this.mRenderComponent.getXform().setPosition(xPos, yPos);
@@ -41,7 +39,7 @@ class DyePack extends engine.GameObject {
         if (objectHit === 0) {
               //slow speed
         }
-
+        
         console.log("Dyepack has been hit!");
         if (objectHit == 1 || objectHit == 2)
             this.isHitAnimated = true;
@@ -70,12 +68,15 @@ class DyePack extends engine.GameObject {
         
 
         //Check to see if object has reached the edge of screen
-        //TODO: replace with aCamera.collideWCBound(this.mPatrol.getXform(),1) ???
         let rightBound = aCamera.getWCCenter()[0] + aCamera.getWCWidth()/2;
         let leftBound = aCamera.getWCCenter()[0] - aCamera.getWCWidth()/2
         if(xForm.getXPos() > rightBound || xForm.getXPos() < leftBound) {
-            this.OnDelete();
-            console.log("Despawned due to world edge");
+            if(xForm.getSize()[0] > 0) {
+                //TODO: Make sure projectile is fully deleted...
+                console.log("Despawned due to world edge");
+                //this.toggleDrawRenderable();
+                xForm.setSize(0,0);
+            }
         }
 
         /*
@@ -91,11 +92,6 @@ class DyePack extends engine.GameObject {
         //TODO: IF HIT PATROL OBJECT? 
 
         //Check to see of object has hit another object... call hit. 
-    }
-
-    OnDelete(){
-        this.set.removeFromSet(this);
-        delete this;
     }
 }
 
