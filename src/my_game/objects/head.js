@@ -85,7 +85,7 @@ class Head extends engine.GameObject {
             par.setFinalColor([0,0,1,.6]);
             par.setSize(1.5,1.5);
             par.setSizeDelta(0.98);
-            par.setVelocity(10 * Math.random(),10 * Math.random());
+            par.setVelocity(10 * Math.random(),10+(10 * Math.random()));
             this.mPS.addToSet(par);
         }
 
@@ -174,11 +174,11 @@ class Head extends engine.GameObject {
         super.update();
     }
     draw(aCamera){
-        this.mPS.draw(aCamera);
         this.mW1.draw(aCamera);
         this.mW2.draw(aCamera);
         this.mPatrol.draw(aCamera);
         super.draw(aCamera);
+        this.mPS.draw(aCamera);
     }
     OnDelete(){
         this.set.removeFromSet(this);

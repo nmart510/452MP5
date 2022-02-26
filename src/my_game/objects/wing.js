@@ -17,7 +17,7 @@ class Wing extends engine.GameObject {
         this.mRenderComponent.getXform().setPosition(atX, atY);
         this.mRenderComponent.getXform().setSize(10, 8);
         this.mRenderComponent.setSpriteSequence(512, 0,      // first element pixel position: top-left 512 is top of image, 0 is left of image
-            204, 164,   // width x height in pixels
+            204, 156,   // width x height in pixels
             5,          // number of elements in this sequence
             0);         // horizontal padding in between
         this.mRenderComponent.setAnimationType(engine.eAnimationType.eSwing);
