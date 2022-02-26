@@ -29,6 +29,7 @@ class Head extends engine.GameObject {
         let r = new engine.RigidRectangle(this.getXform(), 7.5, 7.5);
         let vx = Math.random() - 0.5;
         let vy = Math.random() - 0.5;
+
         //|v| = sqrt(vx^2+xy^2)
         //u = v/|v|
         let vDot = Math.sqrt(vx*vx + vy*vy);
@@ -37,7 +38,8 @@ class Head extends engine.GameObject {
         r.setVelocity(u[0] * speed, u[1] * speed);
         this.setRigidBody(r);
         this.mPatrol.setRigidBody(this.mPatrolBox);
-        this.mPatrol.toggleDrawRigidShape();
+        //this.mPatrol.toggleDrawRigidShape();
+        this.mPatrol.toggleDrawRenderable();
         this.mW1 = new Wing(spriteTexture, xPos+10, yPos+6, this, true);
         this.mW2 = new Wing(spriteTexture, xPos+10, yPos-6, this, false);
         this.set = null;
@@ -136,7 +138,8 @@ class Head extends engine.GameObject {
     draw(aCamera){
         this.mW1.draw(aCamera);
         this.mW2.draw(aCamera);
-        this.mPatrolBox.draw(aCamera);
+        this.mPatrol.draw(aCamera);
+        //this.mPatrolBox.draw(aCamera);
         super.draw(aCamera);
     }
     OnDelete(){

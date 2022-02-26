@@ -257,7 +257,9 @@ class MyGame extends engine.Scene {
             }
         }
         if (engine.input.isKeyClicked(engine.input.keys.B)) {
-            //Toggle bound visibility
+            console.log("B");
+            for (let i = 0; i < this.mPatrols.size(); i++)
+                this.mPatrols.getObjectAt(i).ToggleBox();
         }
         if (this.autoSpawn){
             if (this.cooldown < Date.now()){
