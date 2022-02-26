@@ -452,7 +452,7 @@ MyGame.prototype.randomizeVelocity = function()
         let y = Math.random() * kSpeed * 0.5;
         rigidShape.setVelocity(x, y);
         let c = rigidShape.getCenter();
-        this.mParticles.addEmitterAt(c[0], c[1], 20, _createParticle);
+        //this.mParticles.addEmitterAt(c[0], c[1], 20, _createParticle);
     }
 }
 

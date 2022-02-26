@@ -45,6 +45,7 @@ class Head extends engine.GameObject {
         this.set = null;
         this.other = null;
         this.cooldown = Date.now();
+        this.mPS = new engine.ParticleSet();
     }
     NoteSet(set,other){
         this.set = set;
@@ -52,6 +53,8 @@ class Head extends engine.GameObject {
     }
     hit(){
         //particle emitter
+        let par = _createParticle(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());
+        this.mParticles.addToSet(par);
         this.mRenderComponent.getXform().setPosition(
             this.mRenderComponent.getXform().getXPos() + 5, 
             this.mRenderComponent.getXform().getYPos());
@@ -76,26 +79,26 @@ class Head extends engine.GameObject {
             //bool : getHitStatus
             if (this.mPatrol.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                 if (this.other.getObjectAt(i).isHitAnimating() == false)
-                    this.other.getObjectAt(i).hit(0);
+                    this.other.getObjectAt(i).hit(0,this.mPatrol);
                 if (this.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.hit();
-                        this.other.getObjectAt(i).hit(1); 
+                        this.other.getObjectAt(i).hit(1,this); 
                     }
                 }
                 if (this.mW1.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.mW1.hit();
-                        this.other.getObjectAt(i).hit(2);
+                        this.other.getObjectAt(i).hit(2,this.mW1);
                     }
                 }
                 if (this.mW2.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.mW2.hit();
-                        this.other.getObjectAt(i).hit(2);
+                        this.other.getObjectAt(i).hit(2,this.mW2);
                     }
                 }
             }
@@ -139,7 +142,7 @@ class Head extends engine.GameObject {
         this.mW1.draw(aCamera);
         this.mW2.draw(aCamera);
         this.mPatrol.draw(aCamera);
-        //this.mPatrolBox.draw(aCamera);
+        this.mPS.draw(aCamera);
         super.draw(aCamera);
     }
     OnDelete(){
