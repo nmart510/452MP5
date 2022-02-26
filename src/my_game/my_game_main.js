@@ -126,6 +126,7 @@ class MyGame extends engine.Scene {
 
         this.mAllObjs = new engine.GameObjectSet();
         this.mPlatforms = new engine.GameObjectSet();
+        this.mPatrols = new engine.GameObjectSet();
 
         this.createBounds();  // added to mPlatforms
 
@@ -141,8 +142,8 @@ class MyGame extends engine.Scene {
             let x = 10 + Math.random()*170;
             let y = 15 + Math.random()*110;
             let h = new Head(this.kMinionSprite, x, y);
-            this.mAllObjs.addToSet(h);
-            h.NoteSet(this.mAllObjs);
+            this.mPatrols.addToSet(h);
+            h.NoteSet(this.mPatrols);
         }
 
         this.mMsg = new engine.FontRenderable("Status Message");
@@ -167,6 +168,7 @@ class MyGame extends engine.Scene {
         this.mBg.draw(this.mCamera);
         //this.mPlatforms.draw(this.mCamera);
         this.mAllObjs.draw(this.mCamera);
+        this.mPatrols.draw(this.mCamera);
 
         this.mParticles.draw(this.mCamera);
         if (this.mPSDrawBounds)
@@ -200,6 +202,7 @@ class MyGame extends engine.Scene {
 
         this.mAllObjs.update(this.mCamera);
         //this.mPlatforms.update(this.mCamera);
+        this.mPatrols.update(this.mCamera);
 
         if (engine.input.isKeyClicked(engine.input.keys.P)) {
             engine.physics.togglePositionalCorrection();
@@ -270,20 +273,17 @@ class MyGame extends engine.Scene {
             this.incShapeSize(obj, -kBoundDelta);
         }
 
-        if (engine.input.isKeyClicked(engine.input.keys.G)) {
-            let x = 20 + Math.random() * 60;
-            let y = 75;
-            let t = Math.random() > 0.5;
-            let m = new Minion(this.kMinionSprite, x, y, t);
+        if (engine.input.isKeyClicked(engine.input.keys.C)) {
+            let x = 10 + Math.random()*170;
+            let y = 15 + Math.random()*110;
+            let m = new Head(this.kMinionSprite, x, y);
             if (this.mDrawTexture) // default is false
                 m.toggleDrawRenderable();
             if (this.mDrawBounds) // default is false
                 m.getRigidBody().toggleDrawBound();
             if (!this.mDrawRigidShape) // default is true
                 m.toggleDrawRigidShape();
-            this.mAllObjs.addToSet(m);
-
-            this.mParticles.addEmitterAt(x, y, 200, _createParticle);
+            this.mPatrols.addToSet(m);
         }
         
         // Hero Movement System

@@ -45,6 +45,12 @@ class Head extends WASDObj {
     NoteSet(set){
         this.set = set;
     }
+    hit(){
+        //particle emitter
+        this.mRenderComponent.getXform().setPosition(
+            this.mRenderComponent.getXform().getXPos() + 5, 
+            this.mRenderComponent.getXform().getYPos());
+    }
     update(aCamera){
         this.mW1.update(aCamera);
         this.mW2.update(aCamera);

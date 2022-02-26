@@ -34,8 +34,13 @@ class Wing extends WASDObj {
         this.Parent = parent;
         this.IsTop = isTop;
     }
-    OnHit(){
-        
+    hit(){
+        //particle emitter
+        this.mRenderComponent.setColor([
+            this.mRenderComponent.getColor()[0],
+            this.mRenderComponent.getColor()[1],
+            this.mRenderComponent.getColor()[2],
+            this.mRenderComponent.getColor()[3] + .2]);
     }
 
     update(aCamera) {
