@@ -64,23 +64,30 @@ class Head extends WASDObj {
         this.mPXform.setSize(xr-xl,(yt-yb)*1.5);
         this.mPatrolBox.setShapeSizeTo(xr-xl,(yt-yb)*1.5);
         for (let i = 0; i < this.other.size(); i++){
-            //console.log(this.other.getObjectAt(i));
+            //bool : getHitStatus
             if (this.mPatrol.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                this.other.getObjectAt(i).hit(0);
+                if (this.other.getObjectAt(i).getHitStatus == false)
+                    this.other.getObjectAt(i).hit(0);
                 if (this.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (i > 0)
-                        this.hit();
-                    this.other.getObjectAt(i).hit(1);
+                    if (this.other.getObjectAt(i).getHitStatus == false){
+                        if (i > 0)
+                            this.hit();
+                        this.other.getObjectAt(i).hit(1); 
+                    }
                 }
                 if (this.mW1.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (i > 0)
-                        this.mW1.hit();
-                    this.other.getObjectAt(i).hit(2);
+                    if (this.other.getObjectAt(i).getHitStatus == false){
+                        if (i > 0)
+                            this.mW1.hit();
+                        this.other.getObjectAt(i).hit(2);
+                    }
                 }
                 if (this.mW2.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (i > 0)
-                        this.mW2.hit();
-                    this.other.getObjectAt(i).hit(2);
+                    if (this.other.getObjectAt(i).getHitStatus == false){
+                        if (i > 0)
+                            this.mW2.hit();
+                        this.other.getObjectAt(i).hit(2);
+                    }
                 }
             }
         }
