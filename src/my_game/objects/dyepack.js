@@ -51,13 +51,13 @@ class DyePack extends engine.GameObject {
             //Check if we hit the a head or wing bounds, objectType 1/2, then check pixelTouches
             if (objectType === 1 || objectType === 2) {
                 if(!this.isHitAnimated) { //Check if currently animated
-                    if(!objectHit === null) {
-                        if(this.pixelTouches(objectHit)) {
+                    if(!(objectHit === null)) {
+                        console.log(objectHit);
+                        if(this.pixelTouches(objectHit, [0,0])) {
                             this._OnStart(xform);
-                            //TODO: console.log("TEST");
                         } //If hit object is defined, check pixel positions
                     } else {
-                        this._OnStart(xform);
+                        this._OnStart(xform);           
                     } //otherwise if no object is defined, run hit anyways
                 }
             }
@@ -65,7 +65,7 @@ class DyePack extends engine.GameObject {
             // TODO: if hit hero object then perform hit, no slow needed
             if (objectType === 3) {
                 if(!this.isHitAnimated) { 
-                    if(!objectHit === null) {
+                    if(!(objectHit === null)) {
                         if(this.pixelTouches(objectHit)) {
                             this._OnStart(xform);
                         } //If hit object is defined, check pixel positions
