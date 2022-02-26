@@ -278,45 +278,8 @@ class MyGame extends engine.Scene {
                 this.mPatrols.addToSet(m);
             }
         }
-        //viewport manipulation
-        //hero cam
-        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
-            let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.mHeroCam);
-            }
-        }
-        //dye pack cameras
-        if (engine.input.isKeyClicked(engine.input.keys.One)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam1);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam1);
-            }
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam2);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam2);
-            }
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam3);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam3);
-            }
-        }
+        
+        this.viewportManipulationUpdate();
 
         let obj = this.mAllObjs.getObjectAt(this.mCurrentObj);
 
@@ -359,6 +322,7 @@ class MyGame extends engine.Scene {
             this.mAllObjs.addToSet(projectile); 
         }
 
+        this.updateDyepackCameras();
         
         // Particle System
         this.mParticles.update();
@@ -391,20 +355,7 @@ class MyGame extends engine.Scene {
         let p = obj.getXform().getPosition();
         this.mTarget.getXform().setPosition(p[0], p[1]);
 
-        let autoSpawnMsg = "Auto Spawn: " + this.autoSpawn;
-        this.mMsg.setText(autoSpawnMsg);
-
-        let numPatrolsMsg = "# of Patrols: " + this.mPatrols.size();
-        this.mPatrolsMsg.setText(numPatrolsMsg);
-
-        let dyePackMsg = "# of Dyepacks: " + (this.mAllObjs.size() - 1);
-        this.mDyepackMsg.setText(dyePackMsg);
-        /*msg += "  P(" + engine.physics.getPositionalCorrection() +
-            " " + engine.physics.getRelaxationCount() + ")" +
-            " V(" + engine.physics.getHasMotion() + ")";
-        this.mMsg.setText(msg);
-
-        this.mShapeMsg.setText(obj.getRigidBody().getCurrentState());*/
+        this.updateStatusMessages();
 
         if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
             this.mHeroCam.update();
@@ -417,6 +368,121 @@ class MyGame extends engine.Scene {
         if(this.mCameraSet.getCameraIndex(this.smallCam3) !== -1)
             this.smallCam3.update();
     }
+
+    updateStatusMessages() {
+        let autoSpawnMsg = "Auto Spawn: " + this.autoSpawn;
+        this.mMsg.setText(autoSpawnMsg);
+
+        let numPatrolsMsg = "# of Patrols: " + this.mPatrols.size();
+        this.mPatrolsMsg.setText(numPatrolsMsg);
+
+        let dyePackMsg = "# of Dyepacks: " + (this.mAllObjs.size() - 1);
+        this.mDyepackMsg.setText(dyePackMsg);
+    }
+
+    viewportManipulationUpdate() {
+        //viewport manipulation
+        //hero cam
+        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
+            let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
+            if(index !== -1) {
+                this.mCameraSet.setWasForced(false, index);
+                this.mCameraSet.removeCameraAt(index);
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.mHeroCam);
+                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.mHeroCam));
+            }
+        }
+        //dye pack cameras
+        if (engine.input.isKeyClicked(engine.input.keys.One)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam1);
+            if(index !== -1) {
+                this.mCameraSet.setWasForced(false, index);
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam1);
+                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.smallCam1));
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam2);
+            if(index !== -1) {
+                this.mCameraSet.setWasForced(false, index);
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam2);
+                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.smallCam2));
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam3);
+            if(index !== -1) {
+                this.mCameraSet.setWasForced(false, index);
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam3);
+                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.smallCam3));
+            }
+        }
+
+    }
+
+    updateDyepackCameras() {
+        let oscillatingProjectiles = [];
+        for(let i = 1; i < this.mAllObjs.size(); i++) {
+            if(oscillatingProjectiles.length === 3) {
+                break;
+            }
+            
+            let dyepack = this.mAllObjs.getObjectAt(i);
+            if(dyepack !== null && dyepack.isHitAnimating() && dyepack.isPlayerDye()) {
+                oscillatingProjectiles.push(dyepack);
+            }
+        }
+        for(let i = 0; i < oscillatingProjectiles.length; i++) {
+            if(i === 0) {
+                let xform = oscillatingProjectiles[i].getXform();
+                let index = this.mCameraSet.getCameraIndex(this.smallCam1);
+                this.smallCam1.setWCCenter(xform.getXPos(), xform.getYPos());
+                if(oscillatingProjectiles[i].isHitAnimating()) {
+                    if(index === -1)
+                        this.mCameraSet.addNewCamera(this.smallCam1);
+                } else {
+                    if(index !== -1 && !this.mCameraSet.getWasForced(index))
+                        this.mCameraSet.removeCameraAt(index);
+                }
+            }
+            
+            if(i === 1) {
+                let index = this.mCameraSet.getCameraIndex(this.smallCam2);
+                this.smallCam2.setWCCenter(xform.getXPos(), xform.getYPos());
+                if(oscillatingProjectiles[i].isHitAnimating()) {
+                    if(index === -1)
+                        this.mCameraSet.addNewCamera(this.smallCam2);
+                } else {
+                    if(index !== -1 && !this.mCameraSet.getWasForced(index))
+                        this.mCameraSet.removeCameraAt(index);
+                }
+            }
+            if(i === 2) {
+                let index = this.mCameraSet.getCameraIndex(this.smallCam3);
+                this.smallCam3.setWCCenter(xform.getXPos(), xform.getYPos());
+                if(oscillatingProjectiles[i].isHitAnimating()) {
+                    if(index === -1)
+                        this.mCameraSet.addNewCamera(this.smallCam3);
+                } else {
+                    if(index !== -1 && !this.mCameraSet.getWasForced(index))
+                        this.mCameraSet.removeCameraAt(index);
+                }
+            }
+        }
+        
+    }
+
 
     drawControlUpdate() {
         let i;
