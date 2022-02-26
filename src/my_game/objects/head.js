@@ -116,6 +116,7 @@ class Head extends engine.GameObject {
                 let projectile = new DyePack(this.tex, this.getXform().getXPos()-4, this.getXform().getYPos(), false);
                 projectile.toggleDrawRenderable();
                 this.other.addToSet(projectile); 
+                projectile.NoteSet(this.other);
                 this.cooldown = 1000 + Date.now();
             }
         }
