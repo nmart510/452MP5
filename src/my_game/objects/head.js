@@ -6,14 +6,13 @@
  */
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-import WASDObj from "./wasd_obj.js";
 import engine from "../../engine/index.js";
 import Renderable from "../../engine/renderables/renderable.js";
 import Wing from "../objects/wing.js";
 
 
 
-class Head extends WASDObj {
+class Head extends engine.GameObject {
     constructor(spriteTexture, xPos = 50, yPos = 50) {
         super(null);
         this.kDelta = 0.3;
@@ -66,25 +65,25 @@ class Head extends WASDObj {
         for (let i = 0; i < this.other.size(); i++){
             //bool : getHitStatus
             if (this.mPatrol.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                if (this.other.getObjectAt(i).getHitStatus() == false)
+                if (this.other.getObjectAt(i).isHitAnimating() == false)
                     this.other.getObjectAt(i).hit(0);
                 if (this.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (this.other.getObjectAt(i).getHitStatus() == false){
-                        if (i > 0)
+                    if (this.other.getObjectAt(i).isHitAnimating() == false){
+                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.hit();
                         this.other.getObjectAt(i).hit(1); 
                     }
                 }
                 if (this.mW1.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (this.other.getObjectAt(i).getHitStatus() == false){
-                        if (i > 0)
+                    if (this.other.getObjectAt(i).isHitAnimating() == false){
+                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.mW1.hit();
                         this.other.getObjectAt(i).hit(2);
                     }
                 }
                 if (this.mW2.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (this.other.getObjectAt(i).getHitStatus() == false){
-                        if (i > 0)
+                    if (this.other.getObjectAt(i).isHitAnimating() == false){
+                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.mW2.hit();
                         this.other.getObjectAt(i).hit(2);
                     }
