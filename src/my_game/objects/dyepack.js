@@ -36,6 +36,7 @@ class DyePack extends engine.GameObject {
     hit(objectHit) {
         //TODO: DO SOMETHING
         console.log("Dyepack has been hit!");
+        this.isHitAnimated = true;
         //Terminate after hit
     }
 
