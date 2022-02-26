@@ -329,6 +329,12 @@ class MyGame extends engine.Scene {
         
         // Hero Movement System
         let hero = this.mAllObjs.getObjectAt(0); // Hero should always be first object loaded
+
+        if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
+            this.mHeroCam.update();
+            this.mHeroCam.setWCCenter(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+        }
+        
         if (this.mCamera.isMouseInViewport()) {
             hero.mouseControl(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());   
         }
