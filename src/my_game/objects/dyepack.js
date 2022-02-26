@@ -89,6 +89,11 @@ class DyePack extends engine.GameObject {
 
         //Check to see of object has hit another object... call hit. 
     }
+
+    OnDelete(){
+        this.set.removeFromSet(this);
+        delete this;
+    }
 }
 
 export default DyePack;
