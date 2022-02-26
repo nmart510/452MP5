@@ -21,7 +21,7 @@ class Hero extends engine.GameObject {
         this.beforeHitSize = [0, 0];
 
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
-        this.mRenderComponent.setColor([1, 1, 1, 0]);
+        this.mRenderComponent.setColor([1, 0, 0, 0]);
         this.mRenderComponent.getXform().setPosition(50, 50);
         this.mRenderComponent.getXform().setSize(9, 12);
         this.mRenderComponent.setElementPixelPositions(0, 120, 0, 180);
@@ -30,8 +30,9 @@ class Hero extends engine.GameObject {
 
         let r = new engine.RigidRectangle(this.getXform(), 9, 12);
         this.setRigidBody(r);
-        this.toggleDrawRenderable
-        //this.toggleDrawRigidShape();
+        this.respawn = Date.now();
+        this.mPS = new engine.ParticleSet();
+        
     }
 
     mouseControl(mouseX, mouseY) {
@@ -39,10 +40,24 @@ class Hero extends engine.GameObject {
     }
 
     hit(objectHit = 1) { // If no object is specified presume we hit a head object
+        if(!this.isHitAnimated && (objectHit == 1 || objectHit == 3)){
+            for (let i = 0; i < 20; i++){
+                    let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
+                        this.getXform().getXPos(), this.getXform().getYPos(), 500);
+                    par.setColor([.67,.43,1,1]);
+                    par.setFinalColor([.55,0,.7,.6]);
+                    par.setSize(1.5,1.5);
+                    par.setSizeDelta(0.98);
+                    par.setVelocity(20 * (Math.random() - .5),10+(20 * (Math.random() - .5)));
+                    this.mPS.addToSet(par);
+                }
+        }
+
         let xform = this.getXform();
         let isDone = false;
-        if(objectHit === 1) { //If and only if we hit the head object
+        if(objectHit == 1 || objectHit == 3) { //If and only if we hit the head object or enemy bullet
             if(!this.isHitAnimated) {
+                this.mRenderComponent.setColor([1, 0, 0, this.mRenderComponent.getColor()[3] +.1]);
                 this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
                 this.heroOscillateX.reStart();
                 this.heroOscillateY.reStart();
@@ -57,7 +72,28 @@ class Hero extends engine.GameObject {
             isDone = this.heroOscillateX.done();
         }
 
+        if(this.mRenderComponent.getColor()[3] >= 1){
+            this.respawn = Date.now() + 2000;
+            this.mRenderComponent.setColor([1,0,0,0]);
+            for (let i = 0; i < 80; i++){
+                let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
+                    this.getXform().getXPos(), this.getXform().getYPos(), 500);
+                par.setColor([.67,.43,1,1]);
+                par.setFinalColor([.55,0,.7,.6]);
+                par.setSize(1.5,1.5);
+                par.setSizeDelta(0.98);
+                par.setVelocity(60 * (Math.random() - .5),20+(60 * (Math.random() - .5)));
+                this.mPS.addToSet(par);
+            }
+            this.setVisibility(false);
+        }
+        if(this.respawn > Date.now()){
+            isDone = false;
+        }
+
         if(isDone) { //TODO: Redundant?
+            if (this.isVisible() == false)
+                this.setVisibility(true);
             this.isHitAnimated = false;
             xform.setSize(this.beforeHitSize[0], this.beforeHitSize[1]);
             //console.log("End");
@@ -75,6 +111,11 @@ class Hero extends engine.GameObject {
         let xform = this.getXform();
         let newPosition = this.lerp.get();
         xform.setPosition(newPosition[0], newPosition[1]);
+        this.mPS.update();
+    }
+    draw(aCamera){
+        super.draw(aCamera);
+        this.mPS.draw(aCamera);
     }
 }
 
