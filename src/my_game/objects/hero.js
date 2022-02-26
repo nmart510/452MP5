@@ -41,21 +41,23 @@ class Hero extends engine.GameObject {
 
     hit(objectHit) {
         let xform = this.getXform();
-        //console.log("Size: " + xform.getSize())
         let isDone = false;
-        
-        if(!this.isHitAnimated) {
-            this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
-            this.heroOscillateX.reStart();
-            this.heroOscillateY.reStart();
-            this.isHitAnimated = true;
+        if(objectHit === 1) { //If and only if we hit the head object
+            if(!this.isHitAnimated) {
+                this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
+                this.heroOscillateX.reStart();
+                this.heroOscillateY.reStart();
+                this.isHitAnimated = true;
+            }
         }
+        
         if (this.isHitAnimated) {
             xform.setSize(this.beforeHitSize[0], this.beforeHitSize[1]);
             xform.incWidthBy(this.heroOscillateX.getNext())
             xform.incHeightBy(this.heroOscillateY.getNext())
             isDone = this.heroOscillateX.done();
         }
+
         if(isDone) { //TODO: Redundant?
             this.isHitAnimated = false;
             xform.setSize(this.beforeHitSize[0], this.beforeHitSize[1]);
