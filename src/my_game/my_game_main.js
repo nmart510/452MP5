@@ -14,6 +14,7 @@ class MyGame extends engine.Scene {
     constructor() {
         super();
         this.kMinionSprite = "assets/minion_sprite.png";
+        this.kMinionSprite2 = "assets/minion_sprite2.png";
         this.kPlatformTexture = "assets/platform.png"; //Remove?
         this.kWallTexture = "assets/wall.png"; //Remove?
         this.kTargetTexture = "assets/target.png"; //Remove?
@@ -64,6 +65,7 @@ class MyGame extends engine.Scene {
 
     load() {
         engine.texture.load(this.kMinionSprite);
+        engine.texture.load(this.kMinionSprite2);
         engine.texture.load(this.kPlatformTexture);
         engine.texture.load(this.kWallTexture);
         engine.texture.load(this.kTargetTexture);
@@ -72,6 +74,7 @@ class MyGame extends engine.Scene {
 
     unload() {
         engine.texture.unload(this.kMinionSprite);
+        engine.texture.unload(this.kMinionSprite2);
         engine.texture.unload(this.kPlatformTexture);
         engine.texture.unload(this.kWallTexture);
         engine.texture.unload(this.kTargetTexture);
@@ -143,7 +146,8 @@ class MyGame extends engine.Scene {
         for (let i = 0; i < this.mPatrolNum; i++) {
             let x = 100 + Math.random()*95;
             let y = 37 + Math.random()*75;
-            let h = new Head(this.kMinionSprite, x, y);
+            let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
+            let h = new Head(sprite, x, y);
             this.mPatrols.addToSet(h);
             h.NoteSet(this.mPatrols, this.mAllObjs);
         }
@@ -260,7 +264,8 @@ class MyGame extends engine.Scene {
                 this.cooldown = Date.now() + (Math.random()*1000) + 2000;
                 let x = 100 + Math.random()*95;
                 let y = 37 + Math.random()*75;
-                let m = new Head(this.kMinionSprite, x, y);
+                let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
+                let m = new Head(sprite, x, y);
                 m.NoteSet(this.mPatrols,this.mAllObjs);
                 if (this.mDrawTexture) // default is false
                     m.toggleDrawRenderable();
@@ -316,7 +321,8 @@ class MyGame extends engine.Scene {
         if (engine.input.isKeyClicked(engine.input.keys.C)) {
             let x = 100 + Math.random()*95;
             let y = 37 + Math.random()*75;
-            let m = new Head(this.kMinionSprite, x, y);
+            let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
+            let m = new Head(sprite, x, y);
             m.NoteSet(this.mPatrols,this.mAllObjs);
             if (this.mDrawTexture) // default is false
                 m.toggleDrawRenderable();
