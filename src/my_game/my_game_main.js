@@ -342,8 +342,6 @@ class MyGame extends engine.Scene {
             hero.hit();
         }
 
-        hero.update(); //Used to cycle through hero updates 
-
         // Spawn in DyePack projectiles
         if(engine.input.isKeyClicked(engine.input.keys.Space)) {
             let heroXForm = hero.getXform();

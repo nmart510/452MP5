@@ -18,7 +18,6 @@ class Hero extends engine.GameObject {
         this.isHitAnimated = false;
         this.heroOscillateX = new Oscillate(4.5, 4, 60);
         this.heroOscillateY = new Oscillate(6, 4, 60);
-        this.timesOscillated = 0;
         this.beforeHitSize = [0, 0];
 
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
@@ -44,7 +43,6 @@ class Hero extends engine.GameObject {
         let isDone = false;
         if(objectHit === 1) { //If and only if we hit the head object
             if(!this.isHitAnimated) {
-                //console.log("Start");
                 this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
                 this.heroOscillateX.reStart();
                 this.heroOscillateY.reStart();
@@ -62,6 +60,7 @@ class Hero extends engine.GameObject {
         if(isDone) { //TODO: Redundant?
             this.isHitAnimated = false;
             xform.setSize(this.beforeHitSize[0], this.beforeHitSize[1]);
+            //console.log("End");
         }
         return isDone;
     }

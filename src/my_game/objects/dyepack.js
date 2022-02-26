@@ -40,10 +40,12 @@ class DyePack extends engine.GameObject {
               //slow speed
         }
 
-        //console.log("Dyepack has been hit!");
-        if (objectHit == 1 || objectHit == 2)
+        
+        if (objectHit == 1 || objectHit == 2) {
+            //console.log("Dyepack has been hit!");
             this.isHitAnimated = true;
-        //Terminate after hit
+            //Terminate after hit
+        }
     }
 
     NoteSet(set){
