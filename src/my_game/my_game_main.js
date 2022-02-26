@@ -7,7 +7,6 @@
 import engine from "../engine/index.js";
 import Hero from "./objects/hero.js";
 import Head from "./objects/head.js";
-import Wing from "./objects/wing.js";
 import Minion from "./objects/minion.js";
 import DyePack from "./objects/dyepack.js";
 
@@ -142,12 +141,8 @@ class MyGame extends engine.Scene {
             let x = 10 + Math.random()*170;
             let y = 15 + Math.random()*110;
             let h = new Head(this.kMinionSprite, x, y);
-            let t = new Wing(this.kMinionSprite, x+10, y+6, h, true);
-            let b = new Wing(this.kMinionSprite, x+10, y-6, h, false);
-            h.setWings(t,b);
             this.mAllObjs.addToSet(h);
-            this.mAllObjs.addToSet(t);
-            this.mAllObjs.addToSet(b);
+            h.NoteSet(this.mAllObjs);
         }
 
         this.mMsg = new engine.FontRenderable("Status Message");

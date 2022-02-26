@@ -34,11 +34,13 @@ class Wing extends WASDObj {
         this.Parent = parent;
         this.IsTop = isTop;
     }
-
+    OnHit(){
+        
+    }
 
     update(aCamera) {
-        if (this.parent = null)
-            delete this;
+        if (this.mRenderComponent.getColor[3] >= 1)
+            this.Parent.OnDelete();
         let coord = new LerpVec2(this.mRenderComponent.getXform().getPosition(),120,.05);
         let final;
         if (this.IsTop)

@@ -9,6 +9,8 @@
 import WASDObj from "./wasd_obj.js";
 import engine from "../../engine/index.js";
 import Renderable from "../../engine/renderables/renderable.js";
+import Wing from "../objects/wing.js";
+
 
 
 class Head extends WASDObj {
@@ -20,8 +22,6 @@ class Head extends WASDObj {
         this.mRenderComponent.getXform().setPosition(xPos, yPos);
         this.mRenderComponent.getXform().setSize(7.5, 7.5);
         this.mRenderComponent.setElementPixelPositions(134, 314, 0, 180);
-        this.mW1 = null;
-        this.mW2 = null;
         this.mPatrol = new engine.GameObject(new Renderable());
         this.mPXform = this.mPatrol.getXform();
         this.mPatrolBox = new engine.RigidRectangle(this.mPXform, 10,10);
@@ -38,13 +38,16 @@ class Head extends WASDObj {
         this.setRigidBody(r);
         //this.toggleDrawRenderable();
         this.toggleDrawRigidShape();
+        this.mW1 = new Wing(spriteTexture, xPos+10, yPos+6, this, true);
+        this.mW2 = new Wing(spriteTexture, xPos+10, yPos-6, this, false);
+        this.set = null;
     }
-    
-    setWings(w1, w2){
-        this.mW1 = w1;
-        this.mW2 = w2;
+    NoteSet(set){
+        this.set = set;
     }
     update(aCamera){
+        this.mW1.update(aCamera);
+        this.mW2.update(aCamera);
         let xl = this.mRenderComponent.getXform().getXPos() - (this.mRenderComponent.getXform().getWidth()/2);
         let xr = this.mW1.getXform().getXPos() > this.mW1.getXform().getXPos()? (this.mW1.getXform().getXPos() + (this.mW1.getXform().getWidth()/2)):(this.mW2.getXform().getXPos() + (this.mW2.getXform().getWidth()/2));
         let yb = this.mW2.getXform().getYPos() - this.mW2.getXform().getHeight()/2;
@@ -55,7 +58,7 @@ class Head extends WASDObj {
         this.mPXform.setSize(xr-xl,(yt-yb)*1.5);
         this.mPatrolBox.setShapeSizeTo(xr-xl,(yt-yb)*1.5);
         switch(aCamera.collideWCBound(this.mPatrol.getXform(),1)){
-            case 0: //outside
+            case 0: OnDelete();
             break;
             case 1: if (this.getRigidBody().getVelocity()[0] < 0)
                 this.getRigidBody().setVelocity(-this.getRigidBody().getVelocity()[0],this.getRigidBody().getVelocity()[1]);
@@ -74,8 +77,17 @@ class Head extends WASDObj {
         super.update();
     }
     draw(aCamera){
+        this.mW1.draw(aCamera);
+        this.mW2.draw(aCamera);
         this.mPatrolBox.draw(aCamera);
         super.draw(aCamera);
+    }
+    OnDelete(){
+        console.log("Patrol removed");
+        this.set.removeFromSet(this);
+        delete this.mW1;
+        delete this.mW2;
+        delete this;
     }
 }
 
