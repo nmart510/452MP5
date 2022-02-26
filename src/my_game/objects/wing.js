@@ -30,9 +30,19 @@ class Wing extends engine.GameObject {
         this.setRigidBody(r);
         this.Parent = parent;
         this.IsTop = isTop;
+        this.mPS = new engine.ParticleSet();
     }
     hit(){
-        //particle emitter
+        for (let i = 0; i < 20; i++){
+            let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
+                this.getXform().getXPos(), this.getXform().getYPos(), 500);
+            par.setColor([1,1,1,1]);
+            par.setFinalColor([1,1,1,.6]);
+            par.setSize(1.5,1.5);
+            par.setSizeDelta(0.98);
+            par.setVelocity(20 * Math.random(),10+(20 * Math.random()));
+            this.mPS.addToSet(par);
+        }
         this.mRenderComponent.setColor([
             this.mRenderComponent.getColor()[0],
             this.mRenderComponent.getColor()[1],
@@ -53,9 +63,14 @@ class Wing extends engine.GameObject {
 
         coord.setFinal(final);
         coord._interpolateValue();
+        this.mPS.update(aCamera);
         super.update();
         // remember to update renderable's animation
         this.mRenderComponent.updateAnimation();
+    }
+    draw(aCamera){
+        super.draw(aCamera);
+        this.mPS.draw(aCamera);
     }
 }
 
