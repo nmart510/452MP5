@@ -36,8 +36,8 @@ class Head extends engine.GameObject {
         let speed = 5 + Math.random() * 5;
         r.setVelocity(u[0] * speed, u[1] * speed);
         this.setRigidBody(r);
-        //this.toggleDrawRenderable();
-        this.toggleDrawRigidShape();
+        this.mPatrol.setRigidBody(this.mPatrolBox);
+        this.mPatrol.toggleDrawRigidShape();
         this.mW1 = new Wing(spriteTexture, xPos+10, yPos+6, this, true);
         this.mW2 = new Wing(spriteTexture, xPos+10, yPos-6, this, false);
         this.set = null;
@@ -53,6 +53,12 @@ class Head extends engine.GameObject {
         this.mRenderComponent.getXform().setPosition(
             this.mRenderComponent.getXform().getXPos() + 5, 
             this.mRenderComponent.getXform().getYPos());
+    }
+    ToggleBox(){
+        this.toggleDrawRigidShape();
+        this.mW1.toggleDrawRigidShape();
+        this.mW2.toggleDrawRigidShape();
+        this.mPatrol.toggleDrawRigidShape();
     }
     update(aCamera){
         let xl = this.mRenderComponent.getXform().getXPos() - (this.mRenderComponent.getXform().getWidth()/2);

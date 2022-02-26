@@ -28,8 +28,6 @@ class Wing extends engine.GameObject {
         let r;
         r = new engine.RigidRectangle(this.getXform(), 10, 8);
         this.setRigidBody(r);
-        //this.toggleDrawRenderable();
-        this.toggleDrawRigidShape();
         this.Parent = parent;
         this.IsTop = isTop;
     }
