@@ -13,6 +13,9 @@ class DyePack extends engine.GameObject {
     constructor(spriteTexture, xPos = 0, yPos = 0, friendly = true) {
         super();
         this.kSpeed = 2;
+
+        this.isHitAnimated = false;
+
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
         this.mRenderComponent.setColor([1, 1, 1, 0]);
         this.mRenderComponent.getXform().setPosition(xPos, yPos);
@@ -30,11 +33,13 @@ class DyePack extends engine.GameObject {
         //this.toggleDrawRigidShape();
     }
 
-    hit() {
+    hit(objectHit) {
         //TODO: DO SOMETHING
         console.log("Dyepack has been hit!");
         //Terminate after hit
     }
+
+    getHitStatus() { return this.isHitAnimated; }
 
     update(aCamera) {
         let xForm = this.getXform();

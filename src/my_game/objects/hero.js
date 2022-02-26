@@ -39,7 +39,7 @@ class Hero extends engine.GameObject {
         this.lerp.setFinal([mouseX, mouseY])
     }
 
-    hit() {
+    hit(objectHit) {
         let xform = this.getXform();
         //console.log("Size: " + xform.getSize())
         let isDone = false;
@@ -62,6 +62,8 @@ class Hero extends engine.GameObject {
         }
         return isDone;
     }
+
+    getHitStatus() { return this.isHitAnimated; }
 
     update() {
         if(this.isHitAnimated) {
