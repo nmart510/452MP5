@@ -36,11 +36,10 @@ class DyePack extends engine.GameObject {
 
     hit(objectHit) {
         //TODO: DO SOMETHING
-        
-        if (objectHit === 3) {
+        if (objectHit === 0) {
               //slow speed
         }
-        this.isHitAnimated = true;
+        
         console.log("Dyepack has been hit!");
         if (objectHit == 1 || objectHit == 2)
             this.isHitAnimated = true;
