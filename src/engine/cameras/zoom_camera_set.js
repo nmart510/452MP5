@@ -22,8 +22,11 @@ class ZoomCameraSet extends GameObjectSet {
     getCameraIndex(camera) {
         return this.mCameraSet.indexOf(camera);
     }
-    setCameraMatrix(index) {
-        this.mCameraSet[index].setViewAndCameraMatrix();
+    setCameraMatrix() {
+        for(let i = 0; i < this.mCameraSet.length; i++) {
+            if(this.mCameraSet[i] !== null)
+                this.mCameraSet[i].setViewAndCameraMatrix();
+        }
     }
 }
 export default ZoomCameraSet;
