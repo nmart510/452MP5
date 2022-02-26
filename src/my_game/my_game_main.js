@@ -28,7 +28,8 @@ class MyGame extends engine.Scene {
         this.mSmallCam3 = null;
 
         this.mMsg = null;
-        this.mShapeMsg = null;
+        this.mDyepacksMsg = null;
+        this.mPatrolsMsg = null;
 
         this.mBg = null;
 
@@ -147,15 +148,20 @@ class MyGame extends engine.Scene {
             h.NoteSet(this.mPatrols, this.mAllObjs);
         }
 
-        this.mMsg = new engine.FontRenderable("Status Message");
-        this.mMsg.setColor([0, 0, 0, 1]);
+        this.mMsg = new engine.FontRenderable("auto spawn mode");
+        this.mMsg.setColor([1, 1, 1, 1]);
         this.mMsg.getXform().setPosition(5, 7);
         this.mMsg.setTextHeight(3);
 
-        this.mShapeMsg = new engine.FontRenderable("Shape");
-        this.mShapeMsg.setColor([0, 0, 0, 1]);
-        this.mShapeMsg.getXform().setPosition(5, 73);
-        this.mShapeMsg.setTextHeight(2.5);
+        this.mPatrolsMsg = new engine.FontRenderable("num patrols");
+        this.mPatrolsMsg.setColor([1, 1, 1, 1]);
+        this.mPatrolsMsg.getXform().setPosition(55, 7);
+        this.mPatrolsMsg.setTextHeight(3);
+
+        this.mDyepackMsg = new engine.FontRenderable("num dyepacks");
+        this.mDyepackMsg.setColor([1, 1, 1, 1]);
+        this.mDyepackMsg.getXform().setPosition(100, 7);
+        this.mDyepackMsg.setTextHeight(3);
 
     }
 
@@ -183,8 +189,9 @@ class MyGame extends engine.Scene {
         }
 
         //this.mTarget.draw(this.mCamera);
-        //this.mMsg.draw(this.mCamera);   
-        //this.mShapeMsg.draw(this.mCamera);
+        this.mMsg.draw(this.mCamera); 
+        this.mPatrolsMsg.draw(this.mCamera);
+        this.mDyepackMsg.draw(this.mCamera);  
 
         //set the camera matrix and draw to it after this.
         if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
@@ -371,16 +378,25 @@ class MyGame extends engine.Scene {
 
         let p = obj.getXform().getPosition();
         this.mTarget.getXform().setPosition(p[0], p[1]);
-        msg += "  P(" + engine.physics.getPositionalCorrection() +
+
+        let autoSpawnMsg = "Auto Spawn: " + this.autoSpawn;
+        this.mMsg.setText(autoSpawnMsg);
+
+        let numPatrolsMsg = "# of Patrols: " + this.mPatrols.size();
+        this.mPatrolsMsg.setText(numPatrolsMsg);
+
+        let dyePackMsg = "# of Dyepacks: " + (this.mAllObjs.size() - 1);
+        this.mDyepackMsg.setText(dyePackMsg);
+        /*msg += "  P(" + engine.physics.getPositionalCorrection() +
             " " + engine.physics.getRelaxationCount() + ")" +
             " V(" + engine.physics.getHasMotion() + ")";
         this.mMsg.setText(msg);
 
-        this.mShapeMsg.setText(obj.getRigidBody().getCurrentState());
+        this.mShapeMsg.setText(obj.getRigidBody().getCurrentState());*/
 
         if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
             this.mHeroCam.update();
-            this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+            this.mHeroCam.setWCCenter(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
         }
         if(this.mCameraSet.getCameraIndex(this.smallCam1) !== -1)
             this.smallCam1.update();
