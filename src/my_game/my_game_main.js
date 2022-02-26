@@ -42,6 +42,8 @@ class MyGame extends engine.Scene {
         this.mHead = null;
         this.mTop = null;
         this.mBottom = null;
+        this.autoSpawn = false;
+        this.cooldown = Date.now();
 
         this.mCurrentObj = 0;
         this.mTarget = null;
@@ -139,8 +141,8 @@ class MyGame extends engine.Scene {
         this.mParticles = new engine.ParticleSet();
 
         for (let i = 0; i < this.mPatrolNum; i++) {
-            let x = 10 + Math.random()*170;
-            let y = 15 + Math.random()*110;
+            let x = 100 + Math.random()*95;
+            let y = 37 + Math.random()*75;
             let h = new Head(this.kMinionSprite, x, y);
             this.mPatrols.addToSet(h);
             h.NoteSet(this.mPatrols, this.mAllObjs);
@@ -222,7 +224,7 @@ class MyGame extends engine.Scene {
         this.mPatrols.update(this.mCamera);
 
         if (engine.input.isKeyClicked(engine.input.keys.P)) {
-            engine.physics.togglePositionalCorrection();
+            this.autoSpawn = !this.autoSpawn;
         }
         if (engine.input.isKeyClicked(engine.input.keys.V)) {
             engine.physics.toggleHasMotion();
@@ -231,17 +233,30 @@ class MyGame extends engine.Scene {
             this.randomizeVelocity();
         }
 
-        if (engine.input.isKeyClicked(engine.input.keys.Left)) {
-            this.mCurrentObj -= 1;
-            if (this.mCurrentObj < 0)
-                this.mCurrentObj = this.mAllObjs.size() - 1;
+        if (engine.input.isKeyClicked(engine.input.keys.J)) {
+            for (let i = 0; i < this.mPatrols.size(); i++){
+                this.mPatrols.getObjectAt(i).hit();
+            }
         }
-        if (engine.input.isKeyClicked(engine.input.keys.Right)) {
-            this.mCurrentObj += 1;
-            if (this.mCurrentObj >= this.mAllObjs.size())
-                this.mCurrentObj = 0;
+        if (engine.input.isKeyClicked(engine.input.keys.B)) {
+            //Toggle bound visibility
         }
-
+        if (this.autoSpawn){
+            if (this.cooldown < Date.now()){
+                this.cooldown = Date.now() + (Math.random()*1000) + 2000;
+                let x = 100 + Math.random()*95;
+                let y = 37 + Math.random()*75;
+                let m = new Head(this.kMinionSprite, x, y);
+                m.NoteSet(this.mPatrols,this.mAllObjs);
+                if (this.mDrawTexture) // default is false
+                    m.toggleDrawRenderable();
+                if (this.mDrawBounds) // default is false
+                    m.getRigidBody().toggleDrawBound();
+                if (!this.mDrawRigidShape) // default is true
+                    m.toggleDrawRigidShape();
+                this.mPatrols.addToSet(m);
+            }
+        }
         //viewport manipulation
         //hero cam
         if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
@@ -283,16 +298,10 @@ class MyGame extends engine.Scene {
         }
 
         let obj = this.mAllObjs.getObjectAt(this.mCurrentObj);
-        if (engine.input.isKeyPressed(engine.input.keys.Y)) {
-            this.incShapeSize(obj, kBoundDelta);
-        }
-        if (engine.input.isKeyPressed(engine.input.keys.U)) {
-            this.incShapeSize(obj, -kBoundDelta);
-        }
 
         if (engine.input.isKeyClicked(engine.input.keys.C)) {
-            let x = 10 + Math.random()*170;
-            let y = 15 + Math.random()*110;
+            let x = 100 + Math.random()*95;
+            let y = 37 + Math.random()*75;
             let m = new Head(this.kMinionSprite, x, y);
             m.NoteSet(this.mPatrols,this.mAllObjs);
             if (this.mDrawTexture) // default is false
@@ -319,6 +328,7 @@ class MyGame extends engine.Scene {
         if(engine.input.isKeyClicked(engine.input.keys.Space)) {
             let heroXForm = hero.getXform();
             let projectile = new DyePack(this.kMinionSprite, heroXForm.getXPos()+5, heroXForm.getYPos()+4, true);
+            projectile.NoteSet(this.mAllObjs);
             projectile.toggleDrawRenderable();
             this.mAllObjs.addToSet(projectile); 
         }
