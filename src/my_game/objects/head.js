@@ -66,24 +66,24 @@ class Head extends WASDObj {
         for (let i = 0; i < this.other.size(); i++){
             //bool : getHitStatus
             if (this.mPatrol.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                if (this.other.getObjectAt(i).getHitStatus == false)
+                if (this.other.getObjectAt(i).getHitStatus() == false)
                     this.other.getObjectAt(i).hit(0);
                 if (this.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (this.other.getObjectAt(i).getHitStatus == false){
+                    if (this.other.getObjectAt(i).getHitStatus() == false){
                         if (i > 0)
                             this.hit();
                         this.other.getObjectAt(i).hit(1); 
                     }
                 }
                 if (this.mW1.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (this.other.getObjectAt(i).getHitStatus == false){
+                    if (this.other.getObjectAt(i).getHitStatus() == false){
                         if (i > 0)
                             this.mW1.hit();
                         this.other.getObjectAt(i).hit(2);
                     }
                 }
                 if (this.mW2.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                    if (this.other.getObjectAt(i).getHitStatus == false){
+                    if (this.other.getObjectAt(i).getHitStatus() == false){
                         if (i > 0)
                             this.mW2.hit();
                         this.other.getObjectAt(i).hit(2);
