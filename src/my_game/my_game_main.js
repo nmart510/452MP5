@@ -185,24 +185,33 @@ class MyGame extends engine.Scene {
         //this.mMsg.draw(this.mCamera);   
         //this.mShapeMsg.draw(this.mCamera);
 
-        //set the camera matrix and draw to it after this.
-        this.mCameraSet.setCameraMatrix();
-
-        this.mBg.draw(this.mHeroCam);
-        this.mAllObjs.draw(this.mHeroCam);
+        //set the camera matrix and draw to it after this
         
-        if(this.smallCam1 !== null) {
+        if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.mHeroCam));
+            this.mBg.draw(this.mHeroCam);
+            this.mAllObjs.draw(this.mHeroCam);
+            this.mPatrols.draw(this.mHeroCam);
+        }
+        
+        if(this.mCameraSet.getCameraIndex(this.smallCam1) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam1));
             this.mBg.draw(this.smallCam1);
             this.mAllObjs.draw(this.smallCam1);
+            this.mPatrols.draw(this.smallCam1);
         }
         
-        if(this.smallCam2 !== null) {
+        if(this.mCameraSet.getCameraIndex(this.smallCam2) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam2));
             this.mBg.draw(this.smallCam2);
             this.mAllObjs.draw(this.smallCam2);
+            this.mPatrols.draw(this.smallCam2);
         }
-        if(this.mSmallCam3 !== null) {
+        if(this.mCameraSet.getCameraIndex(this.smallCam3) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam3));
             this.mBg.draw(this.smallCam3);
             this.mAllObjs.draw(this.smallCam3);
+            this.mPatrols.draw(this.smallCam3);
         }
     }
 
@@ -220,6 +229,7 @@ class MyGame extends engine.Scene {
         this.mAllObjs.update(this.mCamera);
         //this.mPlatforms.update(this.mCamera);
         this.mPatrols.update(this.mCamera);
+
 
         if (engine.input.isKeyClicked(engine.input.keys.P)) {
             engine.physics.togglePositionalCorrection();
@@ -240,46 +250,6 @@ class MyGame extends engine.Scene {
             this.mCurrentObj += 1;
             if (this.mCurrentObj >= this.mAllObjs.size())
                 this.mCurrentObj = 0;
-        }
-
-        //viewport manipulation
-        //hero cam
-        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
-            let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.mHeroCam);
-            }
-        }
-        //dye pack cameras
-        if (engine.input.isKeyClicked(engine.input.keys.One)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam1);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam1);
-            }
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam2);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam2);
-            }
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam3);
-            if(index !== -1) {
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam3);
-            }
         }
 
         let obj = this.mAllObjs.getObjectAt(this.mCurrentObj);
@@ -344,6 +314,46 @@ class MyGame extends engine.Scene {
 
         this.drawControlUpdate();
 
+        //viewport manipulation
+        //hero cam
+        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
+            let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.mHeroCam);
+            }
+        }
+        //dye pack cameras
+        if (engine.input.isKeyClicked(engine.input.keys.One)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam1);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam1);
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam2);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam2);
+            }
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
+            let index = this.mCameraSet.getCameraIndex(this.smallCam3);
+            if(index !== -1) {
+                this.mCameraSet.removeCameraAt(index);  
+            }
+            else {
+                this.mCameraSet.addNewCamera(this.smallCam3);
+            }
+        }
+
         if (this.mDrawCollisionInfo)
             this.mCollisionInfos = [];
         else
@@ -361,11 +371,16 @@ class MyGame extends engine.Scene {
 
         this.mShapeMsg.setText(obj.getRigidBody().getCurrentState());
 
-        this.mHeroCam.update();
-        this.smallCam1.update();
-        this.smallCam2.update();
-        this.smallCam3.update();
-        this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+        if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
+            this.mHeroCam.update();
+            this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+        }
+        if(this.mCameraSet.getCameraIndex(this.smallCam1) !== -1)
+            this.smallCam1.update();
+        if(this.mCameraSet.getCameraIndex(this.smallCam2) !== -1)
+            this.smallCam2.update();
+        if(this.mCameraSet.getCameraIndex(this.smallCam3) !== -1)
+            this.smallCam3.update();
     }
 
     drawControlUpdate() {
