@@ -51,14 +51,7 @@ class DyePack extends engine.GameObject {
             //Check if we hit the a head or wing bounds, objectType 1/2, then check pixelTouches
             if (objectType === 1 || objectType === 2) {
                 if(!this.isHitAnimated) { //Check if currently animated
-                    if(!(objectHit === null)) {
-                        console.log(objectHit);
-                        if(this.pixelTouches(objectHit, [0,0])) {
-                            this._OnStart(xform);
-                        } //If hit object is defined, check pixel positions
-                    } else {
-                        this._OnStart(xform);           
-                    } //otherwise if no object is defined, run hit anyways
+                    this._OnStart(xform);
                 }
             }
         } else { //Otherwise if the bullets are fired from enemies

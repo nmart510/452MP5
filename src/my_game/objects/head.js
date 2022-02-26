@@ -85,26 +85,44 @@ class Head extends engine.GameObject {
         this.mPXform.setSize(xr-xl,(yt-yb)*1.5);
         this.mPatrolBox.setShapeSizeTo(xr-xl,(yt-yb)*1.5);
         for (let i = 0; i < this.other.size(); i++){
-            //bool : getHitStatus
+            //Check to see if patrol bounding box collides with another object
             if (this.mPatrol.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
-                if (this.other.getObjectAt(i).isHitAnimating() == false)
+                if (this.other.getObjectAt(i).isHitAnimating() == false) {
                     this.other.getObjectAt(i).hit(0,this.mPatrol);
+                }
+                //Then see if that same object then collides with the head object
                 if (this.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
-                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
+                        //TODO: PIXEL COLLISION
+                        /*
+                        if(!(objectHit === null)) {
+                            //console.log(objectHit);
+                            if(this.pixelTouches(objectHit, [0,0])) {
+                                this._OnStart(xform);
+                            } //If hit object is defined, check pixel positions
+                        } else {
+                            this._OnStart(xform);           
+                        } //otherwise if no object is defined, run hit anyways
+                        */
+                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye()) {
                             this.hit();
+                        }
                         this.other.getObjectAt(i).hit(1,this); 
                     }
                 }
+                //Then see if that same object then collides with the upper wing object
                 if (this.mW1.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
+                        //TODO: PIXEL COLLISION
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.mW1.hit();
                         this.other.getObjectAt(i).hit(2,this.mW1);
                     }
                 }
+                //Then see if that same object then collides with the lower wing object
                 if (this.mW2.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
+                        //TODO: PIXEL COLLISION
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
                             this.mW2.hit();
                         this.other.getObjectAt(i).hit(2,this.mW2);
