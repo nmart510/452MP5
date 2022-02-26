@@ -7,10 +7,9 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 import engine from "../../engine/index.js";
-import WASDObj from "./wasd_obj.js";
 import LerpVec2 from "../../engine/utils/lerp_vec2.js";
 
-class Wing extends WASDObj {
+class Wing extends engine.GameObject {
     constructor(spriteTexture, atX, atY, parent, isTop) {
         super();
         this.mRenderComponent = new engine.SpriteAnimateRenderable(spriteTexture);
