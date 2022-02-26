@@ -294,6 +294,7 @@ class MyGame extends engine.Scene {
             let x = 10 + Math.random()*170;
             let y = 15 + Math.random()*110;
             let m = new Head(this.kMinionSprite, x, y);
+            m.NoteSet(this.mPatrols,this.mAllObjs);
             if (this.mDrawTexture) // default is false
                 m.toggleDrawRenderable();
             if (this.mDrawBounds) // default is false

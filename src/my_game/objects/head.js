@@ -9,6 +9,7 @@
 import engine from "../../engine/index.js";
 import Renderable from "../../engine/renderables/renderable.js";
 import Wing from "../objects/wing.js";
+import DyePack from "../objects/dyepack.js";
 
 
 
@@ -24,7 +25,7 @@ class Head extends engine.GameObject {
         this.mPatrol = new engine.GameObject(new Renderable());
         this.mPXform = this.mPatrol.getXform();
         this.mPatrolBox = new engine.RigidRectangle(this.mPXform, 10,10);
-
+        this.tex = spriteTexture;
         let r = new engine.RigidRectangle(this.getXform(), 7.5, 7.5);
         let vx = Math.random() - 0.5;
         let vy = Math.random() - 0.5;
@@ -41,6 +42,7 @@ class Head extends engine.GameObject {
         this.mW2 = new Wing(spriteTexture, xPos+10, yPos-6, this, false);
         this.set = null;
         this.other = null;
+        this.cooldown = Date.now();
     }
     NoteSet(set,other){
         this.set = set;
@@ -107,6 +109,17 @@ class Head extends engine.GameObject {
                 break;
             default: //anything else
         }
+        if (this.other.getObjectAt(0).getXform().getXPos()+10 < this.getXform().getXPos() 
+            && this.other.getObjectAt(0).getXform().getYPos()-2 < this.getXform().getYPos()
+            && this.other.getObjectAt(0).getXform().getYPos()+2 > this.getXform().getYPos()){
+            if (Date.now() > this.cooldown){
+                let projectile = new DyePack(this.tex, this.getXform().getXPos()-4, this.getXform().getYPos(), false);
+                projectile.toggleDrawRenderable();
+                this.other.addToSet(projectile); 
+                this.cooldown = 1000 + Date.now();
+            }
+        }
+
         if (this.mW1 != null)
         this.mW1.update(aCamera);
         if (this.mW2 != null)
