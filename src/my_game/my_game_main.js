@@ -328,6 +328,7 @@ class MyGame extends engine.Scene {
         if(engine.input.isKeyClicked(engine.input.keys.Space)) {
             let heroXForm = hero.getXform();
             let projectile = new DyePack(this.kMinionSprite, heroXForm.getXPos()+5, heroXForm.getYPos()+4, true);
+            projectile.NoteSet(this.mAllObjs);
             projectile.toggleDrawRenderable();
             this.mAllObjs.addToSet(projectile); 
         }
