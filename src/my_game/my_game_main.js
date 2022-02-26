@@ -394,8 +394,8 @@ let kSpeed = 40;
 MyGame.prototype.randomizeVelocity = function()
 {
     let i = 0;
-    for (i = 0; i<this.mAllObjs.size(); i++) {
-        let obj = this.mAllObjs.getObjectAt(i);
+    for (i = 0; i<this.mPatrols.size(); i++) {
+        let obj = this.mPatrols.getObjectAt(i);
         let rigidShape = obj.getRigidBody();
         let x = (Math.random() - 0.5) * kSpeed;
         let y = Math.random() * kSpeed * 0.5;
