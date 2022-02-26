@@ -188,23 +188,31 @@ class MyGame extends engine.Scene {
         //this.mShapeMsg.draw(this.mCamera);
 
         //set the camera matrix and draw to it after this.
-        this.mCameraSet.setCameraMatrix();
-
-        this.mBg.draw(this.mHeroCam);
-        this.mAllObjs.draw(this.mHeroCam);
+        if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.mHeroCam));
+            this.mBg.draw(this.mHeroCam);
+            this.mAllObjs.draw(this.mHeroCam);
+            this.mPatrols.draw(this.mHeroCam);
+        }
         
-        if(this.smallCam1 !== null) {
+        if(this.mCameraSet.getCameraIndex(this.smallCam1) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam1));
             this.mBg.draw(this.smallCam1);
             this.mAllObjs.draw(this.smallCam1);
+            this.mPatrols.draw(this.smallCam1);
         }
         
-        if(this.smallCam2 !== null) {
+        if(this.mCameraSet.getCameraIndex(this.smallCam2) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam2));
             this.mBg.draw(this.smallCam2);
             this.mAllObjs.draw(this.smallCam2);
+            this.mPatrols.draw(this.smallCam2);
         }
-        if(this.mSmallCam3 !== null) {
+        if(this.mCameraSet.getCameraIndex(this.smallCam3) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam3));
             this.mBg.draw(this.smallCam3);
             this.mAllObjs.draw(this.smallCam3);
+            this.mPatrols.draw(this.smallCam3);
         }
     }
 
@@ -371,11 +379,16 @@ class MyGame extends engine.Scene {
 
         this.mShapeMsg.setText(obj.getRigidBody().getCurrentState());
 
-        this.mHeroCam.update();
-        this.smallCam1.update();
-        this.smallCam2.update();
-        this.smallCam3.update();
-        this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+        if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
+            this.mHeroCam.update();
+            this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+        }
+        if(this.mCameraSet.getCameraIndex(this.smallCam1) !== -1)
+            this.smallCam1.update();
+        if(this.mCameraSet.getCameraIndex(this.smallCam2) !== -1)
+            this.smallCam2.update();
+        if(this.mCameraSet.getCameraIndex(this.smallCam3) !== -1)
+            this.smallCam3.update();
     }
 
     drawControlUpdate() {
