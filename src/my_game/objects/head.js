@@ -54,8 +54,6 @@ class Head extends WASDObj {
             this.mRenderComponent.getXform().getYPos());
     }
     update(aCamera){
-        this.mW1.update(aCamera);
-        this.mW2.update(aCamera);
         let xl = this.mRenderComponent.getXform().getXPos() - (this.mRenderComponent.getXform().getWidth()/2);
         let xr = this.mW1.getXform().getXPos() > this.mW1.getXform().getXPos()? (this.mW1.getXform().getXPos() + (this.mW1.getXform().getWidth()/2)):(this.mW2.getXform().getXPos() + (this.mW2.getXform().getWidth()/2));
         let yb = this.mW2.getXform().getYPos() - this.mW2.getXform().getHeight()/2;
@@ -102,6 +100,10 @@ class Head extends WASDObj {
                 break;
             default: //anything else
         }
+        if (this.mW1 != null)
+        this.mW1.update(aCamera);
+        if (this.mW2 != null)
+        this.mW2.update(aCamera);
         super.update();
     }
     draw(aCamera){
@@ -111,7 +113,6 @@ class Head extends WASDObj {
         super.draw(aCamera);
     }
     OnDelete(){
-        console.log("Patrol removed");
         this.set.removeFromSet(this);
         delete this.mPatrol;
         delete this.mW1;
