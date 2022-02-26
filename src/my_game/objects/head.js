@@ -78,15 +78,16 @@ class Head extends engine.GameObject {
     }
     hit(){
         //particle emitter
-        let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
-            this.getXform().getXPos(), this.getXform().getYPos(), 50);
-        par.setColor([0,1,1,1]);
-        par.setFinalColor([0,0,1,.5]);
-        par.setSize(1.5,1.5);
-        par.setVelocity(10 * Math.random(),10 * Math.random());
-
-
-        this.mPS.addToSet(par);
+        for (let i = 0; i < 20; i++){
+            let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
+                this.getXform().getXPos(), this.getXform().getYPos(), 500);
+            par.setColor([0,1,1,1]);
+            par.setFinalColor([0,0,1,.6]);
+            par.setSize(1.5,1.5);
+            par.setSizeDelta(0.98);
+            par.setVelocity(10 * Math.random(),10 * Math.random());
+            this.mPS.addToSet(par);
+        }
 
         this.mRenderComponent.getXform().setPosition(
             this.mRenderComponent.getXform().getXPos() + 5, 
@@ -173,10 +174,10 @@ class Head extends engine.GameObject {
         super.update();
     }
     draw(aCamera){
+        this.mPS.draw(aCamera);
         this.mW1.draw(aCamera);
         this.mW2.draw(aCamera);
         this.mPatrol.draw(aCamera);
-        this.mPS.draw(aCamera);
         super.draw(aCamera);
     }
     OnDelete(){
