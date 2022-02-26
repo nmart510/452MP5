@@ -41,9 +41,11 @@ class Head extends WASDObj {
         this.mW1 = new Wing(spriteTexture, xPos+10, yPos+6, this, true);
         this.mW2 = new Wing(spriteTexture, xPos+10, yPos-6, this, false);
         this.set = null;
+        this.other = null;
     }
-    NoteSet(set){
+    NoteSet(set,other){
         this.set = set;
+        this.other = other;
     }
     hit(){
         //particle emitter
@@ -63,8 +65,28 @@ class Head extends WASDObj {
         this.mPXform.setPosition(x,y);
         this.mPXform.setSize(xr-xl,(yt-yb)*1.5);
         this.mPatrolBox.setShapeSizeTo(xr-xl,(yt-yb)*1.5);
+        for (let i = 0; i < this.other.size(); i++){
+            //console.log(this.other.getObjectAt(i));
+            if (this.mPatrol.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
+                if (this.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
+                    if (i > 0)
+                        this.hit();
+                    this.other.getObjectAt(i).hit();
+                }
+                if (this.mW1.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
+                    if (i > 0)
+                        this.mW1.hit();
+                    this.other.getObjectAt(i).hit();
+                }
+                if (this.mW2.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
+                    if (i > 0)
+                        this.mW2.hit();
+                    this.other.getObjectAt(i).hit();
+                }
+            }
+        }
         switch(aCamera.collideWCBound(this.mPatrol.getXform(),1)){
-            case 0: OnDelete();
+            case 0: this.OnDelete();
             break;
             case 1: if (this.getRigidBody().getVelocity()[0] < 0)
                 this.getRigidBody().setVelocity(-this.getRigidBody().getVelocity()[0],this.getRigidBody().getVelocity()[1]);
@@ -91,6 +113,7 @@ class Head extends WASDObj {
     OnDelete(){
         console.log("Patrol removed");
         this.set.removeFromSet(this);
+        delete this.mPatrol;
         delete this.mW1;
         delete this.mW2;
         delete this;

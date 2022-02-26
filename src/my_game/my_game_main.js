@@ -143,7 +143,7 @@ class MyGame extends engine.Scene {
             let y = 15 + Math.random()*110;
             let h = new Head(this.kMinionSprite, x, y);
             this.mPatrols.addToSet(h);
-            h.NoteSet(this.mPatrols);
+            h.NoteSet(this.mPatrols, this.mAllObjs);
         }
 
         this.mMsg = new engine.FontRenderable("Status Message");
