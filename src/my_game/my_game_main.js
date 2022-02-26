@@ -7,7 +7,6 @@
 import engine from "../engine/index.js";
 import Hero from "./objects/hero.js";
 import Head from "./objects/head.js";
-import Minion from "./objects/minion.js";
 import DyePack from "./objects/dyepack.js";
 
 //THIS IS A TEST
