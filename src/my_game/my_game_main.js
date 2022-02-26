@@ -313,6 +313,15 @@ class MyGame extends engine.Scene {
             hero.hit();
         }
 
+        let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
+        if(hero.isHitAnimating()) {
+            if(index === -1)
+                this.mCameraSet.addNewCamera(this.mHeroCam);
+        } else {
+            if(index !== -1 && !this.mCameraSet.getWasForced(index))
+                this.mCameraSet.removeCameraAt(index);
+        }
+
         // Spawn in DyePack projectiles
         if(engine.input.isKeyClicked(engine.input.keys.Space)) {
             let heroXForm = hero.getXform();
@@ -443,44 +452,7 @@ class MyGame extends engine.Scene {
                 oscillatingProjectiles.push(dyepack);
             }
         }
-        for(let i = 0; i < oscillatingProjectiles.length; i++) {
-            if(i === 0) {
-                let xform = oscillatingProjectiles[i].getXform();
-                let index = this.mCameraSet.getCameraIndex(this.smallCam1);
-                this.smallCam1.setWCCenter(xform.getXPos(), xform.getYPos());
-                if(oscillatingProjectiles[i].isHitAnimating()) {
-                    if(index === -1)
-                        this.mCameraSet.addNewCamera(this.smallCam1);
-                } else {
-                    if(index !== -1 && !this.mCameraSet.getWasForced(index))
-                        this.mCameraSet.removeCameraAt(index);
-                }
-            }
-            
-            if(i === 1) {
-                let index = this.mCameraSet.getCameraIndex(this.smallCam2);
-                this.smallCam2.setWCCenter(xform.getXPos(), xform.getYPos());
-                if(oscillatingProjectiles[i].isHitAnimating()) {
-                    if(index === -1)
-                        this.mCameraSet.addNewCamera(this.smallCam2);
-                } else {
-                    if(index !== -1 && !this.mCameraSet.getWasForced(index))
-                        this.mCameraSet.removeCameraAt(index);
-                }
-            }
-            if(i === 2) {
-                let index = this.mCameraSet.getCameraIndex(this.smallCam3);
-                this.smallCam3.setWCCenter(xform.getXPos(), xform.getYPos());
-                if(oscillatingProjectiles[i].isHitAnimating()) {
-                    if(index === -1)
-                        this.mCameraSet.addNewCamera(this.smallCam3);
-                } else {
-                    if(index !== -1 && !this.mCameraSet.getWasForced(index))
-                        this.mCameraSet.removeCameraAt(index);
-                }
-            }
-        }
-        
+         
     }
 
 
