@@ -44,7 +44,7 @@ class Hero extends engine.GameObject {
         let isDone = false;
         if(objectHit === 1) { //If and only if we hit the head object
             if(!this.isHitAnimated) {
-                console.log("Start");
+                //console.log("Start");
                 this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
                 this.heroOscillateX.reStart();
                 this.heroOscillateY.reStart();

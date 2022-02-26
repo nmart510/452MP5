@@ -42,7 +42,7 @@ class DyePack extends engine.GameObject {
               //slow speed
         }
 
-        console.log("Dyepack has been hit!");
+        //console.log("Dyepack has been hit!");
         if (objectHit == 1 || objectHit == 2)
             this.isHitAnimated = true;
         //Terminate after hit
@@ -75,7 +75,7 @@ class DyePack extends engine.GameObject {
         let leftBound = aCamera.getWCCenter()[0] - aCamera.getWCWidth()/2
         if(xForm.getXPos() > rightBound || xForm.getXPos() < leftBound) {
             this.OnDelete();
-            console.log("Despawned due to world edge");
+            //console.log("Despawned due to world edge");
         }
 
         /*
