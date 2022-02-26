@@ -32,10 +32,10 @@ class Wing extends engine.GameObject {
         this.IsTop = isTop;
         this.mPS = new engine.ParticleSet();
     }
-    hit(){
+    hit(hitPosition = this.getXform().getPosition()){
         for (let i = 0; i < 20; i++){
             let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
-                this.getXform().getXPos(), this.getXform().getYPos(), 500);
+                hitPosition[0], hitPosition[1], 500);
             par.setColor([1,1,1,1]);
             par.setFinalColor([1,1,1,.6]);
             par.setSize(1.5,1.5);
