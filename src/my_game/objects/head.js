@@ -51,10 +51,43 @@ class Head extends engine.GameObject {
         this.set = set;
         this.other = other;
     }
+    _createParticle(atX, atY) {
+        let life = 30 + Math.random() * 200;
+        let p = new engine.Particle(engine.defaultResources.getDefaultPSTexture(), atX, atY, life);
+        p.setColor([1, 0, 0, 1]);
+        
+        // size of the particle
+        let r = 5.5 + Math.random() * 0.5;
+        p.setSize(r, r);
+        
+        // final color
+        let fr = 3.5 + Math.random();
+        let fg = 0.4 + 0.1 * Math.random();
+        let fb = 0.3 + 0.1 * Math.random();
+        p.setFinalColor([fr, fg, fb, 0.6]);
+        
+        // velocity on the particle
+        let fx = 10 - 20 * Math.random();
+        let fy = 10 * Math.random();
+        p.setVelocity(fx, fy);
+        
+        // size delta
+        p.setSizeDelta(0.98);
+        
+        return p;
+    }
     hit(){
         //particle emitter
-        let par = _createParticle(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());
-        this.mParticles.addToSet(par);
+        let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
+            this.getXform().getXPos(), this.getXform().getYPos(), 50);
+        par.setColor([0,1,1,1]);
+        par.setFinalColor([0,0,1,.5]);
+        par.setSize(1.5,1.5);
+        par.setVelocity(10 * Math.random(),10 * Math.random());
+
+
+        this.mPS.addToSet(par);
+
         this.mRenderComponent.getXform().setPosition(
             this.mRenderComponent.getXform().getXPos() + 5, 
             this.mRenderComponent.getXform().getYPos());
@@ -136,6 +169,7 @@ class Head extends engine.GameObject {
         this.mW1.update(aCamera);
         if (this.mW2 != null)
         this.mW2.update(aCamera);
+        this.mPS.update(aCamera);
         super.update();
     }
     draw(aCamera){
