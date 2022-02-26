@@ -51,11 +51,11 @@ class Head extends engine.GameObject {
         this.set = set;
         this.other = other;
     }
-    hit(){
+    hit(hitPosition = this.getXform().getPosition()){
         //particle emitter
         for (let i = 0; i < 20; i++){
             let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
-                this.getXform().getXPos(), this.getXform().getYPos(), 500);
+                hitPosition[0]+5, hitPosition[1], 500);
             par.setColor([0,1,1,1]);
             par.setFinalColor([0,0,1,.6]);
             par.setSize(1.5,1.5);
@@ -90,42 +90,44 @@ class Head extends engine.GameObject {
                 if (this.other.getObjectAt(i).isHitAnimating() == false) {
                     this.other.getObjectAt(i).hit(0,this.mPatrol);
                 }
+                let positionOfHit = [];
                 //Then see if that same object then collides with the head object
                 if (this.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
-                        //TODO: PIXEL COLLISION
-                        /*
-                        if(!(objectHit === null)) {
-                            //console.log(objectHit);
-                            if(this.pixelTouches(objectHit, [0,0])) {
-                                this._OnStart(xform);
-                            } //If hit object is defined, check pixel positions
-                        } else {
-                            this._OnStart(xform);           
-                        } //otherwise if no object is defined, run hit anyways
-                        */
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye()) {
-                            this.hit();
+                            if(this.other.getObjectAt(i).pixelTouches(this,positionOfHit)) {
+                                this.hit(positionOfHit);
+                                this.other.getObjectAt(i).hit(1,this);
+                            }
+                        } else {
+                            this.other.getObjectAt(i).hit(1,this); 
                         }
-                        this.other.getObjectAt(i).hit(1,this); 
                     }
                 }
                 //Then see if that same object then collides with the upper wing object
                 if (this.mW1.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
-                        //TODO: PIXEL COLLISION
-                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
-                            this.mW1.hit();
-                        this.other.getObjectAt(i).hit(2,this.mW1);
+                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye()) {
+                            if(this.other.getObjectAt(i).pixelTouches(this.mW1, positionOfHit)) {
+                                this.mW1.hit(positionOfHit);
+                                this.other.getObjectAt(i).hit(2,this.mW1); 
+                            }
+                        } else {
+                            this.other.getObjectAt(i).hit(2,this.mW1); 
+                        }
                     }
                 }
                 //Then see if that same object then collides with the lower wing object
                 if (this.mW2.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                     if (this.other.getObjectAt(i).isHitAnimating() == false){
-                        //TODO: PIXEL COLLISION
-                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye())
-                            this.mW2.hit();
-                        this.other.getObjectAt(i).hit(2,this.mW2);
+                        if (i > 0 && this.other.getObjectAt(i).isPlayerDye()) {
+                            if(this.other.getObjectAt(i).pixelTouches(this.mW2, positionOfHit)) {
+                                this.mW2.hit(positionOfHit);
+                                this.other.getObjectAt(i).hit(2,this.mW2); 
+                            }
+                        } else {
+                            this.other.getObjectAt(i).hit(2,this.mW2); 
+                        }
                     }
                 }
             }
@@ -150,7 +152,7 @@ class Head extends engine.GameObject {
         if (this.other.getObjectAt(0).getXform().getXPos()+10 < this.getXform().getXPos() 
             && this.other.getObjectAt(0).getXform().getYPos()-2 < this.getXform().getYPos()
             && this.other.getObjectAt(0).getXform().getYPos()+2 > this.getXform().getYPos()){
-            if (Date.now() > this.cooldown){
+            if (Date.now() > this.cooldown && this.other.getObjectAt(0).isHitAnimating() === false){
                 let projectile = new DyePack(this.tex, this.getXform().getXPos()-4, this.getXform().getYPos(), false);
                 projectile.toggleDrawRenderable();
                 this.other.addToSet(projectile); 
