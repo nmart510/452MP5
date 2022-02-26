@@ -1,6 +1,5 @@
 "use strict";
 import GameObjectSet from "../game_objects/game_object_set.js";
-import ZoomCamera from "./zoom_camera.js";
 
 
 class ZoomCameraSet extends GameObjectSet {
@@ -12,7 +11,7 @@ class ZoomCameraSet extends GameObjectSet {
     addNewCamera(camera) {
         this.mCameraSet.push(camera);
     }
-    //add am existing camera
+    //add an existing camera
     addCameraAt(camera, index) {
         this.mCameraSet[index] = camera;
     }
@@ -24,6 +23,12 @@ class ZoomCameraSet extends GameObjectSet {
     }
     setCameraMatrix(index) {
         this.mCameraSet[index].setViewAndCameraMatrix();
+    }
+    setWasForced(wasForced, index) {
+        this.mCameraSet[index].setForcedVisible(wasForced);
+    }
+    getWasForced(index) {
+        return this.mCameraSet[index].getForcedVisible();
     }
 }
 export default ZoomCameraSet;
