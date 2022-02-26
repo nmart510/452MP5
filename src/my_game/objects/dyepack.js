@@ -13,6 +13,7 @@ class DyePack extends engine.GameObject {
     constructor(spriteTexture, xPos = 0, yPos = 0, friendly = true) {
         super();
         this.kSpeed = 2;
+        this.isFriendly = friendly;
 
         this.isHitAnimated = false;
 
@@ -21,7 +22,7 @@ class DyePack extends engine.GameObject {
         this.mRenderComponent.getXform().setPosition(xPos, yPos);
         this.mRenderComponent.getXform().setSize(2, 3.25);
         this.mRenderComponent.getXform().setRotationInDegree(90);
-        if(friendly) {
+        if(this.isFriendly) {
             this.mRenderComponent.setElementPixelPositions(500, 600, 0, 180);
         } else {
             this.mRenderComponent.setElementPixelPositions(730, 830, 0, 180);
@@ -35,21 +36,39 @@ class DyePack extends engine.GameObject {
 
     hit(objectHit) {
         //TODO: DO SOMETHING
-        console.log("Dyepack has been hit!");
+        
+        if (objectHit === 3) {
+            //slow speed
+        }
         this.isHitAnimated = true;
         //Terminate after hit
     }
 
-    getHitStatus() { return this.isHitAnimated; }
+    NoteSet(set){
+        this.set = set;
+    }
+
+    isHitAnimating() { return this.isHitAnimated; }
+
+    isPlayerDye() { return this.isFriendly; }
+
+    decreaseSpeedBy(delta) { this.kSpeed = this.kSpeed - delta; }
 
     update(aCamera) {
         let xForm = this.getXform();
         //Set default movement 
         //TODO: need to implement checks for other objects...?
-        xForm.setPosition(xForm.getXPos() + this.kSpeed, xForm.getYPos());
+        if(this.isFriendly) {
+            xForm.setPosition(xForm.getXPos() + this.kSpeed, xForm.getYPos());
+        } else {
+            xForm.setPosition(xForm.getXPos() - this.kSpeed, xForm.getYPos());
+        }
+        
 
         //Check to see if object has reached the edge of screen
-        if(xForm.getXPos() > aCamera.getWCCenter()[0] + aCamera.getWCWidth()/2) {
+        let rightBound = aCamera.getWCCenter()[0] + aCamera.getWCWidth()/2;
+        let leftBound = aCamera.getWCCenter()[0] - aCamera.getWCWidth()/2
+        if(xForm.getXPos() > rightBound || xForm.getXPos() < leftBound) {
             if(xForm.getSize()[0] > 0) {
                 //TODO: Make sure projectile is fully deleted...
                 console.log("Despawned due to world edge");

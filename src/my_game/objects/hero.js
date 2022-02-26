@@ -39,11 +39,12 @@ class Hero extends engine.GameObject {
         this.lerp.setFinal([mouseX, mouseY])
     }
 
-    hit(objectHit) {
+    hit(objectHit = 1) { // If no object is specified presume we hit a head object
         let xform = this.getXform();
         let isDone = false;
         if(objectHit === 1) { //If and only if we hit the head object
             if(!this.isHitAnimated) {
+                console.log("Start");
                 this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
                 this.heroOscillateX.reStart();
                 this.heroOscillateY.reStart();
@@ -65,7 +66,7 @@ class Hero extends engine.GameObject {
         return isDone;
     }
 
-    getHitStatus() { return this.isHitAnimated; }
+    isHitAnimating() { return this.isHitAnimated; }
 
     update() {
         if(this.isHitAnimated) {
