@@ -120,7 +120,7 @@ class Head extends engine.GameObject {
             }
         }
 
-        if (this.mW1 != null)
+        if (this.mW1 != null)   
         this.mW1.update(aCamera);
         if (this.mW2 != null)
         this.mW2.update(aCamera);
