@@ -381,6 +381,16 @@ class MyGame extends engine.Scene {
             this.smallCam2.update();
         if(this.mCameraSet.getCameraIndex(this.smallCam3) !== -1)
             this.smallCam3.update();
+
+        if(this.smallCam1.getDyepack() !== null) {
+            this.smallCam1.setFocus(this.smallCam1.getDyepack());
+        }
+        if(this.smallCam2.getDyepack() !== null) {
+            this.smallCam2.setFocus(this.smallCam2.getDyepack());
+        }
+        if(this.smallCam3.getDyepack() !== null) {
+            this.smallCam3.setFocus(this.smallCam3.getDyepack());
+        }
     }
 
     updateStatusMessages() {
@@ -479,7 +489,6 @@ class MyGame extends engine.Scene {
                         this.mOscillatingDyepacks.push(dyepack);
                         camera.setDyepack(dyepack);
                         dyepack.setOnCamera(true);
-                        camera.setFocus(dyepack);
                     }     
                 }    
             }
