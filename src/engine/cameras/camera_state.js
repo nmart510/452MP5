@@ -10,7 +10,7 @@ import LerpVec2 from "../utils/lerp_vec2.js";
 class CameraState {
     //
     constructor(center, width) {
-        this.kCycles = 300;  // number of cycles to complete the transition
+        this.kCycles = 1;  // number of cycles to complete the transition
         this.kRate = 0.1;  // rate of change for each cycle
         this.mCenter = new LerpVec2(center, this.kCycles, this.kRate);
         this.mWidth = new Lerp(width, this.kCycles, this.kRate);
