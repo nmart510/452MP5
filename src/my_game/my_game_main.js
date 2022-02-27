@@ -28,28 +28,34 @@ class MyGame extends engine.Scene {
         this.mSmallCam2 = null;
         this.mSmallCam3 = null;
 
+        // Status Display Messages
         this.mMsg = null;
         this.mDyepacksMsg = null;
         this.mPatrolsMsg = null;
+        this.mScoreMsg = null;
+        this.mScore = 0;
 
+        this.mBounds = null; // Remove?
+        this.mCollisionInfos = []; // Remove?
+
+        // Texture member variables for objects
         this.mBg = null;
-
-        this.mPatrols = [];
-        this.mPatrolNum = 5;
-        this.mPlatforms = null;
-        this.mBounds = null;
-        this.mCollisionInfos = [];
         this.mHero = null;
         this.mHead = null;
         this.mTop = null;
         this.mBottom = null;
+        
+        // Member variables for patrols
+        this.mPatrols = [];
+        this.mPatrolNum = 5;
+        this.mPlatforms = null;
         this.autoSpawn = false;
         this.cooldown = Date.now();
 
-        this.mCurrentObj = 0;
-        this.mTarget = null;
+        this.mCurrentObj = 0; // Remove
+        this.mTarget = null; // Remove
 
-        // Draw controls
+        // Draw controls //Remove?
         this.mDrawCollisionInfo = false;
         this.mDrawTexture = false;
         this.mDrawBounds = false;
@@ -58,7 +64,7 @@ class MyGame extends engine.Scene {
         // Particle Support
         this.mParticles = null;
         this.mPSDrawBounds = false;
-        this.mPSCollision = true;
+        this.mPSCollision = true; // Remove?
     }
 
 
@@ -66,18 +72,18 @@ class MyGame extends engine.Scene {
     load() {
         engine.texture.load(this.kMinionSprite);
         engine.texture.load(this.kMinionSprite2);
-        engine.texture.load(this.kPlatformTexture);
-        engine.texture.load(this.kWallTexture);
-        engine.texture.load(this.kTargetTexture);
+        engine.texture.load(this.kPlatformTexture); //Remove?
+        engine.texture.load(this.kWallTexture); //Remove?
+        engine.texture.load(this.kTargetTexture); //Remove?
         engine.texture.load(this.kBg);
     }
 
     unload() {
         engine.texture.unload(this.kMinionSprite);
         engine.texture.unload(this.kMinionSprite2);
-        engine.texture.unload(this.kPlatformTexture);
-        engine.texture.unload(this.kWallTexture);
-        engine.texture.unload(this.kTargetTexture);
+        engine.texture.unload(this.kPlatformTexture); //Remove?
+        engine.texture.unload(this.kWallTexture); //Remove?
+        engine.texture.unload(this.kTargetTexture); //Remove?
         engine.texture.load(this.kBg);
     }
 
@@ -130,15 +136,14 @@ class MyGame extends engine.Scene {
         engine.defaultResources.setGlobalAmbientIntensity(3);
 
         this.mAllObjs = new engine.GameObjectSet();
-        this.mPlatforms = new engine.GameObjectSet();
-        this.mPatrols = new engine.GameObjectSet();
+        this.mPlatforms = new engine.GameObjectSet(); //Remove?
+        this.mPatrols = new engine.GameObjectSet(); 
 
-        this.createBounds();  // added to mPlatforms
+        this.createBounds();  //Remove?
 
         this.mHero = new Hero(this.kMinionSprite);
-        //this.mHero.toggleDrawRenderable(); //Seems to break the renderable
         this.mAllObjs.addToSet(this.mHero);
-        this.mCurrentObj = 0;
+        this.mCurrentObj = 0; //Remove?
                 
         // particle systems
         this.mParticles = new engine.ParticleSet();
@@ -166,6 +171,11 @@ class MyGame extends engine.Scene {
         this.mDyepackMsg.setColor([1, 1, 1, 1]);
         this.mDyepackMsg.getXform().setPosition(100, 7);
         this.mDyepackMsg.setTextHeight(3);
+
+        this.mScoreMsg = new engine.FontRenderable("score");
+        this.mScoreMsg.setColor([1, 1, 1, 1]);
+        this.mScoreMsg.getXform().setPosition(150, 7);
+        this.mScoreMsg.setTextHeight(3);
 
     }
 
@@ -195,7 +205,8 @@ class MyGame extends engine.Scene {
         //this.mTarget.draw(this.mCamera);
         this.mMsg.draw(this.mCamera); 
         this.mPatrolsMsg.draw(this.mCamera);
-        this.mDyepackMsg.draw(this.mCamera);  
+        this.mDyepackMsg.draw(this.mCamera);
+        this.mScoreMsg.draw(this.mCamera);
 
         //set the camera matrix and draw to it after this.
         if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
@@ -328,7 +339,8 @@ class MyGame extends engine.Scene {
             let projectile = new DyePack(this.kMinionSprite, heroXForm.getXPos()+5, heroXForm.getYPos()+4, true);
             projectile.NoteSet(this.mAllObjs);
             projectile.toggleDrawRenderable();
-            this.mAllObjs.addToSet(projectile); 
+            this.mAllObjs.addToSet(projectile);
+            this.mScore--;
         }
 
         this.updateDyepackCameras();
@@ -387,6 +399,9 @@ class MyGame extends engine.Scene {
 
         let dyePackMsg = "# of Dyepacks: " + (this.mAllObjs.size() - 1);
         this.mDyepackMsg.setText(dyePackMsg);
+
+        let scoreMsg = "Total Score: " + (this.mScore);
+        this.mScoreMsg.setText(scoreMsg);
     }
 
     viewportManipulationUpdate() {
