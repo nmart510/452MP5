@@ -329,58 +329,6 @@ class MyGame extends engine.Scene {
         }
     }
 
-
-    viewportManipulationUpdate() {
-        //viewport manipulation
-        //hero cam
-        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
-            let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
-            if(index !== -1) {
-                this.mCameraSet.setWasForced(false, index);
-                this.mCameraSet.removeCameraAt(index);
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.mHeroCam);
-                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.mHeroCam));
-            }
-        }
-        //dye pack cameras
-        if (engine.input.isKeyClicked(engine.input.keys.One)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam1);
-            if(index !== -1) {
-                this.mCameraSet.setWasForced(false, index);
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam1);
-                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.smallCam1));
-            }
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam2);
-            if(index !== -1) {
-                this.mCameraSet.setWasForced(false, index);
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam2);
-                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.smallCam2));
-            }
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
-            let index = this.mCameraSet.getCameraIndex(this.smallCam3);
-            if(index !== -1) {
-                this.mCameraSet.setWasForced(false, index);
-                this.mCameraSet.removeCameraAt(index);  
-            }
-            else {
-                this.mCameraSet.addNewCamera(this.smallCam3);
-                this.mCameraSet.setWasForced(true, this.mCameraSet.getCameraIndex(this.smallCam3));
-            }
-        }
-
-    }
-
     viewportManipulationUpdate() {
         //viewport manipulation
         //hero cam
