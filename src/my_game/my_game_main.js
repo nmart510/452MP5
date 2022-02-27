@@ -419,9 +419,15 @@ MyGame.prototype.randomizeVelocity = function()
     for (i = 0; i<this.mPatrols.size(); i++) {
         let obj = this.mPatrols.getObjectAt(i);
         let rigidShape = obj.getRigidBody();
-        let x = (Math.random() - 0.5) * kSpeed;
-        let y = Math.random() * kSpeed * 0.5;
-        rigidShape.setVelocity(x, y);
+        let vx = Math.random() - 0.5;
+        let vy = Math.random() - 0.5;
+
+        //|v| = sqrt(vx^2+xy^2)
+        //u = v/|v|
+        let vDot = Math.sqrt(vx*vx + vy*vy);
+        let u = vec2.fromValues(vx*(1/vDot),vy*(1/vDot));
+        let speed = 5 + Math.random() * 5;
+        rigidShape.setVelocity(u[0] * speed, u[1] * speed);
     }
 }
 export default MyGame;
