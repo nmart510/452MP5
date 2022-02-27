@@ -7,11 +7,12 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 import engine from "../../engine/index.js";
+import Score from "../objects/score.js";
 import Oscillate from "../../engine/utils/oscillate.js";
 
 
 class DyePack extends engine.GameObject {
-    constructor(spriteTexture, xPos = 0, yPos = 0, friendly = true) {
+    constructor(spriteTexture, xPos = 0, yPos = 0, friendly = true, score) {
         super();
         this.mSpeed = 2;
         this.kDelta = 0.1;
@@ -24,6 +25,8 @@ class DyePack extends engine.GameObject {
         this.beforeHitSize = [0, 0];
 
         this.timeOfDeletion = Date.now() + 5000;
+
+        this.mScore = score;
 
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
         this.mRenderComponent.setColor([1, 1, 1, 0]);
@@ -59,7 +62,6 @@ class DyePack extends engine.GameObject {
         } else { //Otherwise if the bullets are fired from enemies
             // TODO: if hit hero object then perform hit, no slow needed
             if (objectType === 3) {
-                console.log("Checking");
                 if(!this.isHitAnimated) { //Check if currently animated
                     this._OnStart(xform);
                 }
@@ -76,7 +78,7 @@ class DyePack extends engine.GameObject {
             isDone = this.dyeOscillate.done();
         }
 
-        if(isDone) { //TODO: Redundant?
+        if(isDone) {
             this.isHitAnimated = false;
             this._OnDelete();
             //console.log("Despawned due to animation concluding");
@@ -116,7 +118,7 @@ class DyePack extends engine.GameObject {
                 if (this.getBBox().boundCollideStatus(this.set.getObjectAt(0).getBBox()) > 0 &&
                     this.set.getObjectAt(0).isHitAnimating() == false 
                     && this.isHitAnimating() == false){
-                    console.log("Player hit");
+                    //console.log("Player hit");
                     this.set.getObjectAt(0).hit(3);
                     this.hit(3,this);
                 }
@@ -142,9 +144,12 @@ class DyePack extends engine.GameObject {
         //Check to see if object has reached the edge of screen
         let rightBound = aCamera.getWCCenter()[0] + aCamera.getWCWidth()/2;
         let leftBound = aCamera.getWCCenter()[0] - aCamera.getWCWidth()/2
-        if(xForm.getXPos() > rightBound || xForm.getXPos() < leftBound) {
+        if(this.isFriendly && xForm.getXPos() > rightBound) {
+            this.mScore.increaseScoreBy(-2);
             this._OnDelete();
             //console.log("Despawned due to world edge");
+        } else if(xForm.getXPos() < leftBound) {
+            this._OnDelete();
         }
 
         super.update();

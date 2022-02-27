@@ -52,7 +52,7 @@ class Wing extends engine.GameObject {
 
     update(aCamera) {
         if (this.mRenderComponent.getColor()[3] >= 1){
-            this.Parent.OnDelete();
+            this.Parent.onDelete();
         }
         let coord = new LerpVec2(this.mRenderComponent.getXform().getPosition(),120,.05);
         let final;

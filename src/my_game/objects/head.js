@@ -8,13 +8,12 @@
 
 import engine from "../../engine/index.js";
 import Renderable from "../../engine/renderables/renderable.js";
+import Score from "../objects/score.js";
 import Wing from "../objects/wing.js";
 import DyePack from "../objects/dyepack.js";
 
-
-
 class Head extends engine.GameObject {
-    constructor(spriteTexture, xPos = 50, yPos = 50) {
+    constructor(spriteTexture, xPos = 50, yPos = 50, score) {
         super(null);
         this.kDelta = 0.3;
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
@@ -26,6 +25,7 @@ class Head extends engine.GameObject {
         this.mPXform = this.mPatrol.getXform();
         this.mPatrolBox = new engine.RigidRectangle(this.mPXform, 10,10);
         this.tex = spriteTexture;
+        this.mScore = score;
         let r = new engine.RigidRectangle(this.getXform(), 7.5, 7.5);
         let vx = Math.random() - 0.5;
         let vy = Math.random() - 0.5;
@@ -133,7 +133,7 @@ class Head extends engine.GameObject {
             }
         }
         switch(aCamera.collideWCBound(this.mPatrol.getXform(),1)){
-            case 0: this.OnDelete();
+            case 0: this.onDelete();
             break;
             case 1: if (this.getRigidBody().getVelocity()[0] < 0)
                 this.getRigidBody().setVelocity(-this.getRigidBody().getVelocity()[0],this.getRigidBody().getVelocity()[1]);
@@ -175,7 +175,9 @@ class Head extends engine.GameObject {
         super.draw(aCamera);
         this.mPS.draw(aCamera);
     }
-    OnDelete(){
+    onDelete(){
+        this.mScore.increaseScoreBy(5);
+        console.log(this.mScore);
         this.set.removeFromSet(this);
         delete this.mPatrol;
         delete this.mW1;

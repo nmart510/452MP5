@@ -88,7 +88,7 @@ class Hero extends engine.GameObject {
                 this.mPS.addToSet(par);
             }
             this.setVisibility(false);
-            this.heroDeaths--;
+            this.heroDeaths++;
         }
         if(this.respawn > Date.now()){
             isDone = false;

@@ -7,6 +7,7 @@
 import engine from "../engine/index.js";
 import Hero from "./objects/hero.js";
 import Head from "./objects/head.js";
+import Score from "./objects/score.js";
 import DyePack from "./objects/dyepack.js";
 
 //THIS IS A TEST
@@ -33,7 +34,7 @@ class MyGame extends engine.Scene {
         this.mDyepacksMsg = null;
         this.mPatrolsMsg = null;
         this.mScoreMsg = null;
-        this.mScore = 0;
+        this.mScore = new Score();
 
         this.mOscillatingDyepacks = [];
 
@@ -154,7 +155,7 @@ class MyGame extends engine.Scene {
             let x = 100 + Math.random()*95;
             let y = 37 + Math.random()*75;
             let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
-            let h = new Head(sprite, x, y);
+            let h = new Head(sprite, x, y, this.mScore);
             this.mPatrols.addToSet(h);
             h.NoteSet(this.mPatrols, this.mAllObjs);
         }
@@ -255,7 +256,7 @@ class MyGame extends engine.Scene {
             for (let i = 0; i < this.mPatrols.size(); i++){
                 this.mPatrols.getObjectAt(i).hit();
             }
-            this.mScore = this.mScore - 10;
+            this.mScore.increaseScoreBy(-10);
         }
         if (engine.input.isKeyClicked(engine.input.keys.B)) {
             console.log("B");
@@ -326,7 +327,7 @@ class MyGame extends engine.Scene {
         // Spawn in DyePack projectiles
         if(engine.input.isKeyClicked(engine.input.keys.Space)) {
             let heroXForm = hero.getXform();
-            let projectile = new DyePack(this.kMinionSprite, heroXForm.getXPos()+5, heroXForm.getYPos()+4, true);
+            let projectile = new DyePack(this.kMinionSprite, heroXForm.getXPos()+5, heroXForm.getYPos()+4, true, this.mScore);
             projectile.NoteSet(this.mAllObjs);
             projectile.toggleDrawRenderable();
             this.mAllObjs.addToSet(projectile);
@@ -341,20 +342,7 @@ class MyGame extends engine.Scene {
         // Particle System
         this.mParticles.update();
         if (engine.input.isKeyClicked(engine.input.keys.E))
-            this.mPSDrawBounds = !this.mPSDrawBounds;
-        if (engine.input.isKeyPressed(engine.input.keys.Q)) {
-            if (this.mCamera.isMouseInViewport()) {
-                let par = _createParticle(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());
-                this.mParticles.addToSet(par);
-            }
-        }
-
-        /*if (engine.input.isKeyClicked(engine.input.keys.One))
-            this.mPSCollision = !this.mPSCollision;
-        if (this.mPSCollision) {
-            engine.particleSystem.resolveRigidShapeSetCollision(this.mAllObjs, this.mParticles);
-            engine.particleSystem.resolveRigidShapeSetCollision(this.mPlatforms, this.mParticles);
-        }*/
+            console.log(this.mScore);
 
         this.drawControlUpdate();
 
@@ -403,7 +391,7 @@ class MyGame extends engine.Scene {
         let dyePackMsg = "# of Dyepacks: " + (this.mAllObjs.size() - 1);
         this.mDyepackMsg.setText(dyePackMsg);
 
-        let scoreMsg = "Total Score: " + (this.mScore - this.mHero.getHeroDeaths()*50);
+        let scoreMsg = "Total Score: " + (this.mScore.getScore() - this.mHero.getHeroDeaths()*50);
         this.mScoreMsg.setText(scoreMsg);
     }
 
