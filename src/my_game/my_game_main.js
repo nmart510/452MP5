@@ -268,6 +268,25 @@ class MyGame extends engine.Scene {
             this.mAllObjs.addToSet(projectile);
         }
 
+        if(engine.input.isKeyClicked(engine.input.keys.S)) {
+            for(let i = 1; i < this.mAllObjs.size(); i++) {
+                let dyepack = this.mAllObjs.getObjectAt(i);
+                if(dyepack.isPlayerDye()) {
+                    dyepack.hit(1);
+                } else {
+                    dyepack.hit(3);
+                }
+                
+            }
+        }
+
+        if(engine.input.isKeyPressed(engine.input.keys.D)) {
+            for(let i = 1; i < this.mAllObjs.size(); i++) {
+                let dyepack = this.mAllObjs.getObjectAt(i);
+                dyepack.decreaseSpeedBy(0.1);
+            }
+        }
+
         this.updateDyepackCameras();
 
         this.showDyepackCamera(this.smallCam1);
