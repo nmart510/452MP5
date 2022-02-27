@@ -17,6 +17,8 @@ class DyePack extends engine.GameObject {
         this.kDelta = 0.1;
         this.isFriendly = friendly;
 
+        this.isOnCamera = false;
+
         this.isHitAnimated = false;
         this.dyeOscillate = new Oscillate(4,20,300) //TODO: X-Amplitude of 4, 0.2?
         this.beforeHitSize = [0, 0];
@@ -85,6 +87,8 @@ class DyePack extends engine.GameObject {
     NoteSet(set){
         this.set = set;
     }
+
+    setOnCamera(onCamera) { this.isOnCamera = onCamera; }
 
     isHitAnimating() { return this.isHitAnimated; }
 

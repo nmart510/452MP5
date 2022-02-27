@@ -35,6 +35,8 @@ class MyGame extends engine.Scene {
         this.mScoreMsg = null;
         this.mScore = 0;
 
+        this.mOscillatingDyepacks = [];
+
         this.mBounds = null; // Remove?
         this.mCollisionInfos = []; // Remove?
 
@@ -208,32 +210,19 @@ class MyGame extends engine.Scene {
         this.mDyepackMsg.draw(this.mCamera);
         this.mScoreMsg.draw(this.mCamera);
 
-        //set the camera matrix and draw to it after this.
-        if(this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1) {
-            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.mHeroCam));
-            this.mBg.draw(this.mHeroCam);
-            this.mAllObjs.draw(this.mHeroCam);
-            this.mPatrols.draw(this.mHeroCam);
-        }
-        
-        if(this.mCameraSet.getCameraIndex(this.smallCam1) !== -1) {
-            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam1));
-            this.mBg.draw(this.smallCam1);
-            this.mAllObjs.draw(this.smallCam1);
-            this.mPatrols.draw(this.smallCam1);
-        }
-        
-        if(this.mCameraSet.getCameraIndex(this.smallCam2) !== -1) {
-            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam2));
-            this.mBg.draw(this.smallCam2);
-            this.mAllObjs.draw(this.smallCam2);
-            this.mPatrols.draw(this.smallCam2);
-        }
-        if(this.mCameraSet.getCameraIndex(this.smallCam3) !== -1) {
-            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(this.smallCam3));
-            this.mBg.draw(this.smallCam3);
-            this.mAllObjs.draw(this.smallCam3);
-            this.mPatrols.draw(this.smallCam3);
+        this.setSmallerViewport(this.mHeroCam);
+        this.setSmallerViewport(this.smallCam1);
+        this.setSmallerViewport(this.smallCam2);
+        this.setSmallerViewport(this.smallCam3);
+
+    }
+
+    setSmallerViewport(camera) {
+        if(this.mCameraSet.getCameraIndex(camera) !== -1) {
+            this.mCameraSet.setCameraMatrix(this.mCameraSet.getCameraIndex(camera));
+            this.mBg.draw(camera);
+            this.mAllObjs.draw(camera);
+            this.mPatrols.draw(camera);
         }
     }
 
@@ -326,7 +315,7 @@ class MyGame extends engine.Scene {
         }
 
         let index = this.mCameraSet.getCameraIndex(this.mHeroCam);
-        if(hero.isHitAnimating()) {
+        if(hero.isHitAnimating() && hero.isVisible()) {
             if(index === -1)
                 this.mCameraSet.addNewCamera(this.mHeroCam);
         } else {
@@ -344,6 +333,10 @@ class MyGame extends engine.Scene {
         }
 
         this.updateDyepackCameras();
+
+        this.showDyepackCamera(this.smallCam1);
+        this.showDyepackCamera(this.smallCam2);
+        this.showDyepackCamera(this.smallCam3);
         
         // Particle System
         this.mParticles.update();
@@ -404,6 +397,21 @@ class MyGame extends engine.Scene {
         this.mScoreMsg.setText(scoreMsg);
     }
 
+    showDyepackCamera(camera) {
+        let index = this.mCameraSet.getCameraIndex(camera);
+        if(camera.getDyepack() !== null && camera.getDyepack().isHitAnimating()) {
+            if(index === -1)
+                this.mCameraSet.addNewCamera(camera);
+        } else {
+            if(index !== -1 && !this.mCameraSet.getWasForced(index)) {
+                this.mCameraSet.removeCameraAt(index);
+                this.mOscillatingDyepacks.splice(this.mOscillatingDyepacks.indexOf(camera.getDyepack()), 1);
+                camera.setDyepack(null);  
+            }
+        }
+    }
+
+
     viewportManipulationUpdate() {
         //viewport manipulation
         //hero cam
@@ -456,18 +464,54 @@ class MyGame extends engine.Scene {
     }
 
     updateDyepackCameras() {
-        let oscillatingProjectiles = [];
-        for(let i = 1; i < this.mAllObjs.size(); i++) {
-            if(oscillatingProjectiles.length === 3) {
-                break;
-            }
-            
-            let dyepack = this.mAllObjs.getObjectAt(i);
-            if(dyepack !== null && dyepack.isHitAnimating() && dyepack.isPlayerDye()) {
-                oscillatingProjectiles.push(dyepack);
+        //only add a new dyepack if there are less than 3 being displayed
+        if(this.mOscillatingDyepacks.length < 3 && this.mAllObjs.size() > 1) {
+            for(let i = 1; i < this.mAllObjs.size(); i++) {
+                let dyepack = this.mAllObjs.getObjectAt(i);
+
+                if(dyepack.isOnCamera) {
+                    continue;
+                }
+
+                if(dyepack !== null && dyepack.isHitAnimating() && dyepack.isPlayerDye()) {
+                    let camera = this.getFirstAvailZoomCam();   
+                    if(camera !== null && camera.getDyepack() === null) {
+                        this.mOscillatingDyepacks.push(dyepack);
+                        camera.setDyepack(dyepack);
+                        dyepack.setOnCamera(true);
+                        camera.setFocus(dyepack);
+                    }     
+                }    
             }
         }
          
+    }
+
+    getFirstAvailZoomCam() {
+        if(this.isZoomCamAvail()) {
+            //get the camera index of the first available camera
+            let index1 = this.mCameraSet.getCameraIndex(this.smallCam1);
+            let index2 = this.mCameraSet.getCameraIndex(this.smallCam2);
+            let index3 = this.mCameraSet.getCameraIndex(this.smallCam3);
+
+            if(index1 === -1) {
+                return this.smallCam1;
+            }
+            if(index2 === -1) {
+                return this.smallCam2;
+            }
+            if(index3 === -1) {
+                return this.smallCam3;
+            }
+        }
+        return null;
+        
+    }
+    isZoomCamAvail() {
+        return ((this.mCameraSet.size() < 4 && 
+            this.mCameraSet.getCameraIndex(this.mHeroCam) !== -1)
+            || (this.mCameraSet.size() < 3 && 
+                this.mCameraSet.getCameraIndex(this.mHeroCam) === -1));
     }
 
 
