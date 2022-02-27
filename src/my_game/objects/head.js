@@ -177,7 +177,6 @@ class Head extends engine.GameObject {
     }
     onDelete(){
         this.mScore.increaseScoreBy(5);
-        console.log(this.mScore);
         this.set.removeFromSet(this);
         delete this.mPatrol;
         delete this.mW1;

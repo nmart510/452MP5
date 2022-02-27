@@ -269,7 +269,7 @@ class MyGame extends engine.Scene {
                 let x = 100 + Math.random()*95;
                 let y = 37 + Math.random()*75;
                 let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
-                let m = new Head(sprite, x, y);
+                let m = new Head(sprite, x, y, this.mScore);
                 m.NoteSet(this.mPatrols,this.mAllObjs);
                 if (this.mDrawTexture) // default is false
                     m.toggleDrawRenderable();
@@ -289,7 +289,7 @@ class MyGame extends engine.Scene {
             let x = 100 + Math.random()*95;
             let y = 37 + Math.random()*75;
             let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
-            let m = new Head(sprite, x, y);
+            let m = new Head(sprite, x, y, this.mScore);
             m.NoteSet(this.mPatrols,this.mAllObjs);
             if (this.mDrawTexture) // default is false
                 m.toggleDrawRenderable();
@@ -325,7 +325,7 @@ class MyGame extends engine.Scene {
         }
 
         // Spawn in DyePack projectiles
-        if(engine.input.isKeyClicked(engine.input.keys.Space)) {
+        if(engine.input.isKeyClicked(engine.input.keys.Space) && this.mHero.isVisible()) {
             let heroXForm = hero.getXform();
             let projectile = new DyePack(this.kMinionSprite, heroXForm.getXPos()+5, heroXForm.getYPos()+4, true, this.mScore);
             projectile.NoteSet(this.mAllObjs);

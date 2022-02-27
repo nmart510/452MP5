@@ -145,7 +145,7 @@ class DyePack extends engine.GameObject {
         let rightBound = aCamera.getWCCenter()[0] + aCamera.getWCWidth()/2;
         let leftBound = aCamera.getWCCenter()[0] - aCamera.getWCWidth()/2
         if(this.isFriendly && xForm.getXPos() > rightBound) {
-            this.mScore.increaseScoreBy(-2);
+            this.mScore.increaseScoreBy(-1);
             this._OnDelete();
             //console.log("Despawned due to world edge");
         } else if(xForm.getXPos() < leftBound) {
