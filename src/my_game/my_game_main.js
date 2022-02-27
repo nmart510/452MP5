@@ -10,15 +10,11 @@ import Head from "./objects/head.js";
 import Score from "./objects/score.js";
 import DyePack from "./objects/dyepack.js";
 
-//THIS IS A TEST
 class MyGame extends engine.Scene {
     constructor() {
         super();
         this.kMinionSprite = "assets/minion_sprite.png";
         this.kMinionSprite2 = "assets/minion_sprite2.png";
-        this.kPlatformTexture = "assets/platform.png"; //Remove?
-        this.kWallTexture = "assets/wall.png"; //Remove?
-        this.kTargetTexture = "assets/target.png"; //Remove?
         this.kBg = "assets/background.png";
 
         // The camera to view the scene
@@ -38,15 +34,10 @@ class MyGame extends engine.Scene {
 
         this.mOscillatingDyepacks = [];
 
-        this.mBounds = null; // Remove?
-        this.mCollisionInfos = []; // Remove?
-
         // Texture member variables for objects
         this.mBg = null;
         this.mHero = null;
         this.mHead = null;
-        this.mTop = null;
-        this.mBottom = null;
         
         // Member variables for patrols
         this.mPatrols = [];
@@ -55,19 +46,8 @@ class MyGame extends engine.Scene {
         this.autoSpawn = false;
         this.cooldown = Date.now();
 
-        this.mCurrentObj = 0; // Remove
-        this.mTarget = null; // Remove
-
-        // Draw controls //Remove?
-        this.mDrawCollisionInfo = false;
-        this.mDrawTexture = false;
-        this.mDrawBounds = false;
-        this.mDrawRigidShape = true;
-
         // Particle Support
         this.mParticles = null;
-        this.mPSDrawBounds = false;
-        this.mPSCollision = true; // Remove?
     }
 
 
@@ -75,18 +55,12 @@ class MyGame extends engine.Scene {
     load() {
         engine.texture.load(this.kMinionSprite);
         engine.texture.load(this.kMinionSprite2);
-        engine.texture.load(this.kPlatformTexture); //Remove?
-        engine.texture.load(this.kWallTexture); //Remove?
-        engine.texture.load(this.kTargetTexture); //Remove?
         engine.texture.load(this.kBg);
     }
 
     unload() {
         engine.texture.unload(this.kMinionSprite);
         engine.texture.unload(this.kMinionSprite2);
-        engine.texture.unload(this.kPlatformTexture); //Remove?
-        engine.texture.unload(this.kWallTexture); //Remove?
-        engine.texture.unload(this.kTargetTexture); //Remove?
         engine.texture.load(this.kBg);
     }
 
@@ -139,14 +113,10 @@ class MyGame extends engine.Scene {
         engine.defaultResources.setGlobalAmbientIntensity(3);
 
         this.mAllObjs = new engine.GameObjectSet();
-        this.mPlatforms = new engine.GameObjectSet(); //Remove?
         this.mPatrols = new engine.GameObjectSet(); 
-
-        this.createBounds();  //Remove?
 
         this.mHero = new Hero(this.kMinionSprite);
         this.mAllObjs.addToSet(this.mHero);
-        this.mCurrentObj = 0; //Remove?
                 
         // particle systems
         this.mParticles = new engine.ParticleSet();
@@ -190,22 +160,11 @@ class MyGame extends engine.Scene {
 
         this.mCamera.setViewAndCameraMatrix();
         this.mBg.draw(this.mCamera);
-        //this.mPlatforms.draw(this.mCamera);
         this.mAllObjs.draw(this.mCamera);
         this.mPatrols.draw(this.mCamera);
 
         this.mParticles.draw(this.mCamera);
-        if (this.mPSDrawBounds)
-            this.mParticles.drawMarkers(this.mCamera);
 
-        // for now draw these ...
-        if (this.mCollisionInfos !== null) {
-        for (let i = 0; i < this.mCollisionInfos.length; i++)
-            this.mCollisionInfos[i].draw(this.mCamera);
-        this.mCollisionInfos = [];
-        }
-
-        //this.mTarget.draw(this.mCamera);
         this.mMsg.draw(this.mCamera); 
         this.mPatrolsMsg.draw(this.mCamera);
         this.mDyepackMsg.draw(this.mCamera);
@@ -227,19 +186,10 @@ class MyGame extends engine.Scene {
         }
     }
 
-    incShapeSize(obj, delta) {
-        let s = obj.getRigidBody();
-        let r = s.incShapeSizeBy(delta);
-    }
-
     // The Update function, updates the application state. Make sure to _NOT_ draw
     // anything from this function!
     update() {
-        let msg = "";
-        let kBoundDelta = 0.1;
-
         this.mAllObjs.update(this.mCamera);
-        //this.mPlatforms.update(this.mCamera);
         this.mPatrols.update(this.mCamera);
 
         if (engine.input.isKeyClicked(engine.input.keys.P)) {
@@ -259,7 +209,6 @@ class MyGame extends engine.Scene {
             this.mScore.increaseScoreBy(-10);
         }
         if (engine.input.isKeyClicked(engine.input.keys.B)) {
-            console.log("B");
             for (let i = 0; i < this.mPatrols.size(); i++)
                 this.mPatrols.getObjectAt(i).ToggleBox();
         }
@@ -271,19 +220,11 @@ class MyGame extends engine.Scene {
                 let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
                 let m = new Head(sprite, x, y, this.mScore);
                 m.NoteSet(this.mPatrols,this.mAllObjs);
-                if (this.mDrawTexture) // default is false
-                    m.toggleDrawRenderable();
-                if (this.mDrawBounds) // default is false
-                    m.getRigidBody().toggleDrawBound();
-                if (!this.mDrawRigidShape) // default is true
-                    m.toggleDrawRigidShape();
                 this.mPatrols.addToSet(m);
             }
         }
         
         this.viewportManipulationUpdate();
-
-        let obj = this.mAllObjs.getObjectAt(this.mCurrentObj);
 
         if (engine.input.isKeyClicked(engine.input.keys.C)) {
             let x = 100 + Math.random()*95;
@@ -291,12 +232,6 @@ class MyGame extends engine.Scene {
             let sprite = (Math.random()-.5) < 0? this.kMinionSprite : this.kMinionSprite2;
             let m = new Head(sprite, x, y, this.mScore);
             m.NoteSet(this.mPatrols,this.mAllObjs);
-            if (this.mDrawTexture) // default is false
-                m.toggleDrawRenderable();
-            if (this.mDrawBounds) // default is false
-                m.getRigidBody().toggleDrawBound();
-            if (!this.mDrawRigidShape) // default is true
-                m.toggleDrawRigidShape();
             this.mPatrols.addToSet(m);
         }
         
@@ -341,21 +276,6 @@ class MyGame extends engine.Scene {
         
         // Particle System
         this.mParticles.update();
-        if (engine.input.isKeyClicked(engine.input.keys.E))
-            console.log(this.mScore);
-
-        this.drawControlUpdate();
-
-        if (this.mDrawCollisionInfo)
-            this.mCollisionInfos = [];
-        else
-            this.mCollisionInfos = null;
-        engine.physics.processObjToSet(this.mHero, this.mPlatforms, this.mCollisionInfos);
-        engine.physics.processSetToSet(this.mAllObjs, this.mPlatforms, this.mCollisionInfos);
-        engine.physics.processSet(this.mAllObjs, this.mCollisionInfos);
-
-        let p = obj.getXform().getPosition();
-        this.mTarget.getXform().setPosition(p[0], p[1]);
 
         this.updateStatusMessages();
 
@@ -510,29 +430,6 @@ class MyGame extends engine.Scene {
             || (this.mCameraSet.size() < 3 && 
                 this.mCameraSet.getCameraIndex(this.mHeroCam) === -1));
     }
-
-
-    drawControlUpdate() {
-        let i;
-        if (engine.input.isKeyClicked(engine.input.keys.C)) {
-            this.mDrawCollisionInfo = !this.mDrawCollisionInfo;
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.T)) {
-            this.mDrawTexture = !this.mDrawTexture;
-            this.mAllObjs.toggleDrawRenderable();
-            //this.mPlatforms.toggleDrawRenderable();
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.R)) {
-            this.mDrawRigidShape = !this.mDrawRigidShape;
-            this.mAllObjs.toggleDrawRigidShape();
-            //this.mPlatforms.toggleDrawRigidShape();
-        }
-        if (engine.input.isKeyClicked(engine.input.keys.B)) {
-            this.mDrawBounds = !this.mDrawBounds;
-            this.mAllObjs.toggleDrawBound();
-            //this.mPlatforms.toggleDrawBound();
-        }
-    }
 }
 
 let kSpeed = 40;
@@ -545,34 +442,6 @@ MyGame.prototype.randomizeVelocity = function()
         let x = (Math.random() - 0.5) * kSpeed;
         let y = Math.random() * kSpeed * 0.5;
         rigidShape.setVelocity(x, y);
-        let c = rigidShape.getCenter();
-        //this.mParticles.addEmitterAt(c[0], c[1], 20, _createParticle);
     }
-}
-
-function _createParticle(atX, atY) {
-    let life = 30 + Math.random() * 200;
-    let p = new engine.Particle(engine.defaultResources.getDefaultPSTexture(), atX, atY, life);
-    p.setColor([1, 0, 0, 1]);
-    
-    // size of the particle
-    let r = 5.5 + Math.random() * 0.5;
-    p.setSize(r, r);
-    
-    // final color
-    let fr = 3.5 + Math.random();
-    let fg = 0.4 + 0.1 * Math.random();
-    let fb = 0.3 + 0.1 * Math.random();
-    p.setFinalColor([fr, fg, fb, 0.6]);
-    
-    // velocity on the particle
-    let fx = 10 - 20 * Math.random();
-    let fy = 10 * Math.random();
-    p.setVelocity(fx, fy);
-    
-    // size delta
-    p.setSizeDelta(0.98);
-    
-    return p;
 }
 export default MyGame;
