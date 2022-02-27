@@ -95,10 +95,20 @@ class DyePack extends engine.GameObject {
     update(aCamera) {
         let xForm = this.getXform();
         if(!this.isHitAnimated) {
+            let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
+                xForm.getXPos(), xForm.getYPos() , 50);
+            par.setSize(1.5,1.5);
+            par.setSizeDelta(0.98);
+            par.setVelocity(20 * Math.random(),10+(20 * Math.random()));
+
             if(this.isFriendly) {
                 xForm.setPosition(xForm.getXPos() + this.mSpeed, xForm.getYPos());
+                par.setColor([0,1,0,1]);
+                par.setFinalColor([1,1,1,.6]);
             } else {
                 xForm.setPosition(xForm.getXPos() - this.mSpeed, xForm.getYPos());
+                par.setColor([1,0,0 ,1]);
+                par.setFinalColor([1,1,1,.6]);
                 if (this.getBBox().boundCollideStatus(this.set.getObjectAt(0).getBBox()) > 0 &&
                     this.set.getObjectAt(0).isHitAnimating() == false 
                     && this.isHitAnimating() == false){
@@ -107,6 +117,7 @@ class DyePack extends engine.GameObject {
                     this.hit(3,this);
                 }
             }
+            this.mPS.addToSet(par);
 
             if(this.mSpeed <= 0) {
                 //console.log("Despawned due to lack of speed");
@@ -118,6 +129,7 @@ class DyePack extends engine.GameObject {
                 this._OnDelete();
             }
         }
+        this.mPS.update(aCamera); 
         
         if(this.isHitAnimated) {
             this.hit();
@@ -141,6 +153,10 @@ class DyePack extends engine.GameObject {
     _OnDelete(){
         this.set.removeFromSet(this);
         delete this;
+    }
+    draw(aCamera){
+        super.draw(aCamera);
+        this.mPS.draw(aCamera);
     }
 }
 
