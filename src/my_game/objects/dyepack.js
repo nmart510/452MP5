@@ -98,6 +98,13 @@ class DyePack extends engine.GameObject {
                 xForm.setPosition(xForm.getXPos() + this.mSpeed, xForm.getYPos());
             } else {
                 xForm.setPosition(xForm.getXPos() - this.mSpeed, xForm.getYPos());
+                if (this.getBBox().boundCollideStatus(this.set.getObjectAt(0).getBBox()) > 0 &&
+                    this.set.getObjectAt(0).isHitAnimating() == false 
+                    && this.isHitAnimating == false){
+                    console.log("Player hit");
+                    this.set.getObjectAt(0).hit(3);
+                    hit(3,this);
+                }
             }
 
             if(this.mSpeed <= 0) {
