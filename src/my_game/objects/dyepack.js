@@ -18,7 +18,7 @@ class DyePack extends engine.GameObject {
         this.isFriendly = friendly;
 
         this.isHitAnimated = false;
-        this.dyeOscillateX = new Oscillate(4,20,300) //TODO: X-Amplitude of 4, 0.2?
+        this.dyeOscillate = new Oscillate(4,20,300) //TODO: X-Amplitude of 4, 0.2?
         this.beforeHitSize = [0, 0];
 
         this.timeOfDeletion = Date.now() + 5000;
@@ -57,20 +57,21 @@ class DyePack extends engine.GameObject {
         } else { //Otherwise if the bullets are fired from enemies
             // TODO: if hit hero object then perform hit, no slow needed
             if (objectType === 3) {
-                if(!this.isHitAnimated) { 
-                    if(!(objectHit === null)) {
-                        if(this.pixelTouches(objectHit)) {
-                            this._OnStart(xform);
-                        } //If hit object is defined, check pixel positions
-                    }  //otherwise if no object is defined, don't run hit
+                console.log("Checking");
+                if(!this.isHitAnimated) { //Check if currently animated
+                    this._OnStart(xform);
                 }
             }
         }
 
         if (this.isHitAnimated) {
             xform.setPosition(this.beforeHitPos[0], this.beforeHitPos[1]);
-            xform.incXPosBy(this.dyeOscillateX.getNext())
-            isDone = this.dyeOscillateX.done();
+            if(this.isFriendly) {
+                xform.incXPosBy(this.dyeOscillate.getNext())
+            } else {
+                xform.incYPosBy(this.dyeOscillate.getNext())
+            }
+            isDone = this.dyeOscillate.done();
         }
 
         if(isDone) { //TODO: Redundant?
@@ -100,10 +101,10 @@ class DyePack extends engine.GameObject {
                 xForm.setPosition(xForm.getXPos() - this.mSpeed, xForm.getYPos());
                 if (this.getBBox().boundCollideStatus(this.set.getObjectAt(0).getBBox()) > 0 &&
                     this.set.getObjectAt(0).isHitAnimating() == false 
-                    && this.isHitAnimating == false){
+                    && this.isHitAnimating() == false){
                     console.log("Player hit");
                     this.set.getObjectAt(0).hit(3);
-                    hit(3,this);
+                    this.hit(3,this);
                 }
             }
 
@@ -133,7 +134,7 @@ class DyePack extends engine.GameObject {
 
     _OnStart(xform) {
         this.beforeHitPos = [xform.getXPos(), xform.getYPos()];
-        this.dyeOscillateX.reStart();
+        this.dyeOscillate.reStart();
         this.isHitAnimated = true;
     }
 
