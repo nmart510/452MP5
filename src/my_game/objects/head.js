@@ -88,7 +88,7 @@ class Head extends engine.GameObject {
             //Check to see if patrol bounding box collides with another object
             if (this.mPatrol.getBBox().boundCollideStatus(this.other.getObjectAt(i).getBBox()) > 0){
                 if (this.other.getObjectAt(i).isHitAnimating() == false) {
-                    this.other.getObjectAt(i).hit(0,this.mPatrol);
+                    this.other.getObjectAt(i).hit(0);
                 }
                 let positionOfHit = [];
                 //Then see if that same object then collides with the head object
@@ -97,10 +97,10 @@ class Head extends engine.GameObject {
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye()) {
                             if(this.other.getObjectAt(i).pixelTouches(this,positionOfHit)) {
                                 this.hit(positionOfHit);
-                                this.other.getObjectAt(i).hit(1,this);
+                                this.other.getObjectAt(i).hit(1);
                             }
                         } else {
-                            this.other.getObjectAt(i).hit(1,this); 
+                            this.other.getObjectAt(i).hit(1); 
                         }
                     }
                 }
@@ -110,10 +110,10 @@ class Head extends engine.GameObject {
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye()) {
                             if(this.other.getObjectAt(i).pixelTouches(this.mW1, positionOfHit)) {
                                 this.mW1.hit(positionOfHit);
-                                this.other.getObjectAt(i).hit(2,this.mW1); 
+                                this.other.getObjectAt(i).hit(2); 
                             }
                         } else {
-                            this.other.getObjectAt(i).hit(2,this.mW1); 
+                            this.other.getObjectAt(i).hit(2); 
                         }
                     }
                 }
@@ -123,10 +123,10 @@ class Head extends engine.GameObject {
                         if (i > 0 && this.other.getObjectAt(i).isPlayerDye()) {
                             if(this.other.getObjectAt(i).pixelTouches(this.mW2, positionOfHit)) {
                                 this.mW2.hit(positionOfHit);
-                                this.other.getObjectAt(i).hit(2,this.mW2); 
+                                this.other.getObjectAt(i).hit(2); 
                             }
                         } else {
-                            this.other.getObjectAt(i).hit(2,this.mW2); 
+                            this.other.getObjectAt(i).hit(2); 
                         }
                     }
                 }

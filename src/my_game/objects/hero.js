@@ -19,6 +19,8 @@ class Hero extends engine.GameObject {
         this.heroOscillateX = new Oscillate(4.5, 4, 60);
         this.heroOscillateY = new Oscillate(6, 4, 60);
         this.beforeHitSize = [0, 0];
+        
+        this.heroDeaths = 0;
 
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
         this.mRenderComponent.setColor([.67,.43,1,0]);
@@ -86,6 +88,7 @@ class Hero extends engine.GameObject {
                 this.mPS.addToSet(par);
             }
             this.setVisibility(false);
+            this.heroDeaths--;
         }
         if(this.respawn > Date.now()){
             isDone = false;
@@ -103,6 +106,8 @@ class Hero extends engine.GameObject {
 
     isHitAnimating() { return this.isHitAnimated; }
 
+    getHeroDeaths() { return this.heroDeaths; }
+
     update() {
         if(this.isHitAnimated) {
             this.hit();
@@ -112,6 +117,7 @@ class Hero extends engine.GameObject {
         let newPosition = this.lerp.get();
         xform.setPosition(newPosition[0], newPosition[1]);
         this.mPS.update();
+        super.update();
     }
     draw(aCamera){
         super.draw(aCamera);

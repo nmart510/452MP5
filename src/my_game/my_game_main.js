@@ -266,6 +266,7 @@ class MyGame extends engine.Scene {
             for (let i = 0; i < this.mPatrols.size(); i++){
                 this.mPatrols.getObjectAt(i).hit();
             }
+            this.mScore = this.mScore - 10;
         }
         if (engine.input.isKeyClicked(engine.input.keys.B)) {
             console.log("B");
@@ -340,7 +341,6 @@ class MyGame extends engine.Scene {
             projectile.NoteSet(this.mAllObjs);
             projectile.toggleDrawRenderable();
             this.mAllObjs.addToSet(projectile);
-            this.mScore--;
         }
 
         this.updateDyepackCameras();
@@ -400,7 +400,7 @@ class MyGame extends engine.Scene {
         let dyePackMsg = "# of Dyepacks: " + (this.mAllObjs.size() - 1);
         this.mDyepackMsg.setText(dyePackMsg);
 
-        let scoreMsg = "Total Score: " + (this.mScore);
+        let scoreMsg = "Total Score: " + (this.mScore - this.mHero.getHeroDeaths()*50);
         this.mScoreMsg.setText(scoreMsg);
     }
 

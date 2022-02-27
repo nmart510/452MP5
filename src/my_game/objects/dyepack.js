@@ -40,7 +40,7 @@ class DyePack extends engine.GameObject {
         this.mPS = new engine.ParticleSet();
     }
 
-    hit(objectType, objectHit = null) { //objectType 0 = patrolBB, 1 = head, 2 = wing, 3 = hero
+    hit(objectType) { //objectType 0 = patrolBB, 1 = head, 2 = wing, 3 = hero
         let xform = this.getXform();
         let isDone = false;
         if(this.isFriendly) { //If the bullets are fired from the hero
@@ -142,6 +142,8 @@ class DyePack extends engine.GameObject {
             this._OnDelete();
             //console.log("Despawned due to world edge");
         }
+
+        super.update();
     }
 
     _OnStart(xform) {
