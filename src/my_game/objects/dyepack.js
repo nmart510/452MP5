@@ -37,7 +37,7 @@ class DyePack extends engine.GameObject {
         let r = new engine.RigidRectangle(this.getXform(), 2, 3.25);
         this.setRigidBody(r);
         this.toggleDrawRenderable();
-        //this.toggleDrawRigidShape();
+        this.mPS = new engine.ParticleSet();
     }
 
     hit(objectType, objectHit = null) { //objectType 0 = patrolBB, 1 = head, 2 = wing, 3 = hero

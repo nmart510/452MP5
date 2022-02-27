@@ -21,7 +21,7 @@ class Hero extends engine.GameObject {
         this.beforeHitSize = [0, 0];
 
         this.mRenderComponent = new engine.SpriteRenderable(spriteTexture);
-        this.mRenderComponent.setColor([1, 0, 0, 0]);
+        this.mRenderComponent.setColor([.67,.43,1,0]);
         this.mRenderComponent.getXform().setPosition(50, 50);
         this.mRenderComponent.getXform().setSize(9, 12);
         this.mRenderComponent.setElementPixelPositions(0, 120, 0, 180);
@@ -57,7 +57,7 @@ class Hero extends engine.GameObject {
         let isDone = false;
         if(objectHit == 1 || objectHit == 3) { //If and only if we hit the head object or enemy bullet
             if(!this.isHitAnimated) {
-                this.mRenderComponent.setColor([1, 0, 0, this.mRenderComponent.getColor()[3] +.1]);
+                this.mRenderComponent.setColor([.67,.43,1, this.mRenderComponent.getColor()[3] +.1]);
                 this.beforeHitSize = [xform.getSize()[0], xform.getSize()[1]];
                 this.heroOscillateX.reStart();
                 this.heroOscillateY.reStart();
@@ -74,7 +74,7 @@ class Hero extends engine.GameObject {
 
         if(this.mRenderComponent.getColor()[3] >= 1){
             this.respawn = Date.now() + 2000;
-            this.mRenderComponent.setColor([1,0,0,0]);
+            this.mRenderComponent.setColor([.67,.43,1,0]);
             for (let i = 0; i < 80; i++){
                 let par = new engine.Particle(engine.defaultResources.getDefaultPSTexture(),
                     this.getXform().getXPos(), this.getXform().getYPos(), 500);
