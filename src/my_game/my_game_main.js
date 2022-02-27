@@ -381,6 +381,38 @@ class MyGame extends engine.Scene {
 
     }
 
+    viewportManipulationUpdate() {
+        //viewport manipulation
+        //hero cam
+        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
+            this.hideOrShowCamera(this.mHeroCam);
+        }
+        //dye pack cameras
+        if (engine.input.isKeyClicked(engine.input.keys.One)) {
+            this.hideOrShowCamera(this.smallCam1);
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
+            this.hideOrShowCamera(this.smallCam2);
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
+            this.hideOrShowCamera(this.smallCam3);
+        }
+
+    }
+
+    hideOrShowCamera(camera) {
+        let index = this.mCameraSet.getCameraIndex(camera);
+        if(index !== -1) {
+            this.mCameraSet.setWasForced(false, index);
+            this.mCameraSet.removeCameraAt(index);  
+        }
+        else {
+            this.mCameraSet.addNewCamera(camera);
+            index = this.mCameraSet.getCameraIndex(camera);
+            this.mCameraSet.setWasForced(true, index);
+        }
+    }
+
     updateDyepackCameras() {
         //only add a new dyepack if there are less than 3 being displayed
         if(this.mOscillatingDyepacks.length < 3 && this.mAllObjs.size() > 1) {
